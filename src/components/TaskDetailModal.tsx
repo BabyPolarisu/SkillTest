@@ -59,15 +59,15 @@ export default function TaskDetailModal({
   const priorityBadge = {
     high: {
       label: "ความสำคัญสูง",
-      cls: "bg-red-50 text-red-700 border-red-200",
+      cls: "bg-red-50 dark:bg-red-950/60 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800",
     },
     medium: {
       label: "ความสำคัญปานกลาง",
-      cls: "bg-amber-50 text-amber-700 border-amber-200",
+      cls: "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800",
     },
     low: {
       label: "ความสำคัญทั่วไป",
-      cls: "bg-slate-100 text-slate-600 border-slate-200",
+      cls: "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600",
     },
   }[task.priority];
 
@@ -76,9 +76,9 @@ export default function TaskDetailModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full shadow-xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-2xl w-full shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4 bg-slate-50/60">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50/60 dark:bg-slate-900/50">
           <div className="flex flex-wrap items-center gap-2">
             {category && (
               <span
@@ -97,7 +97,7 @@ export default function TaskDetailModal({
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-md"
           >
             <X className="w-5 h-5" />
           </button>
@@ -107,7 +107,7 @@ export default function TaskDetailModal({
         <div className="p-6 space-y-6 overflow-y-auto flex-1">
           {/* Title & Status Switcher */}
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-            <h2 className="text-xl font-bold text-slate-800 leading-snug">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 leading-snug">
               {task.title}
             </h2>
 
@@ -118,10 +118,10 @@ export default function TaskDetailModal({
               }
               className={`px-3 py-1.5 rounded-md text-xs font-semibold border cursor-pointer shrink-0 focus:outline-none ${
                 task.status === "completed"
-                  ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                  ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
                   : task.status === "in_progress"
-                  ? "bg-sky-50 text-sky-700 border-sky-300"
-                  : "bg-amber-50 text-amber-700 border-amber-300"
+                  ? "bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-300 dark:border-sky-800"
+                  : "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800"
               }`}
             >
               <option value="pending">รอดำเนินการ (Pending)</option>
@@ -134,8 +134,8 @@ export default function TaskDetailModal({
           <div
             className={`p-4 rounded-md border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
               isOverdue
-                ? "bg-red-50 border-red-300"
-                : "bg-indigo-50/70 border-indigo-200"
+                ? "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800"
+                : "bg-indigo-50/70 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-800/80"
             }`}
           >
             <div className="flex items-center gap-3">
@@ -149,12 +149,14 @@ export default function TaskDetailModal({
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-slate-500 font-medium">
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                   วันที่กำหนดส่งงาน (Due Date)
                 </p>
                 <p
                   className={`text-base font-bold ${
-                    isOverdue ? "text-red-700" : "text-slate-800"
+                    isOverdue
+                      ? "text-red-700 dark:text-red-300"
+                      : "text-slate-800 dark:text-slate-100"
                   }`}
                 >
                   {task.dueDate}
@@ -167,15 +169,15 @@ export default function TaskDetailModal({
               </div>
             </div>
 
-            <div className="flex items-center gap-3 sm:border-l sm:pl-6 border-indigo-200/80">
-              <div className="w-10 h-10 rounded-md bg-white border border-indigo-200 text-indigo-600 flex items-center justify-center shrink-0">
+            <div className="flex items-center gap-3 sm:border-l sm:pl-6 border-indigo-200/80 dark:border-indigo-800">
+              <div className="w-10 h-10 rounded-md bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
                 <Clock className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-slate-500 font-medium">
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
                   เวลากำหนดส่ง (Time Schedule)
                 </p>
-                <p className="text-base font-bold text-indigo-900">
+                <p className="text-base font-bold text-indigo-900 dark:text-indigo-200">
                   {task.dueTime} น.
                 </p>
               </div>
@@ -183,17 +185,17 @@ export default function TaskDetailModal({
           </div>
 
           {/* Owner & Tagged Users Info */}
-          <div className="bg-slate-50 p-4 rounded-md border border-slate-200 space-y-3 text-xs sm:text-sm">
-            <div className="flex items-center gap-2 text-slate-600">
-              <UserIcon className="w-4 h-4 text-indigo-600 shrink-0" />
+          <div className="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-md border border-slate-200 dark:border-slate-700 space-y-3 text-xs sm:text-sm">
+            <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
+              <UserIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
               <span>ผู้สร้างงาน:</span>
-              <span className="font-semibold text-slate-800">
+              <span className="font-semibold text-slate-800 dark:text-slate-100">
                 {owner?.name || "ไม่ระบุ"}
               </span>
             </div>
 
-            <div className="flex items-start gap-2 text-slate-600 pt-2 border-t border-slate-200/70">
-              <Users className="w-4 h-4 text-indigo-600 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 text-slate-600 dark:text-slate-300 pt-2 border-t border-slate-200/70 dark:border-slate-700">
+              <Users className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
               <div className="flex flex-wrap items-center gap-1.5">
                 <span>ผู้ที่เกี่ยวข้อง:</span>
                 {task.taggedUserIds.length === 0 ? (
@@ -205,10 +207,10 @@ export default function TaskDetailModal({
                     return (
                       <span
                         key={uid}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs bg-white border border-slate-300 text-slate-700 text-xs font-medium"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-xs font-medium"
                       >
                         <span
-                          className="w-2 h-2 rounded-xs"
+                          className="w-2 h-2 rounded-full"
                           style={{ backgroundColor: u.avatarColor }}
                         />
                         {u.name} ({u.role})
@@ -225,7 +227,7 @@ export default function TaskDetailModal({
             <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
               รายละเอียดงาน
             </h3>
-            <div className="bg-white rounded-md border border-slate-200 p-4 text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+            <div className="bg-white dark:bg-slate-900/50 rounded-md border border-slate-200 dark:border-slate-700 p-4 text-sm text-slate-700 dark:text-slate-200 whitespace-pre-wrap leading-relaxed">
               {task.description || "ไม่ได้ระบุรายละเอียดเพิ่มเติม"}
             </div>
           </div>
@@ -234,14 +236,14 @@ export default function TaskDetailModal({
           {imageAttachments.length > 0 && (
             <div>
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <ImageIcon className="w-4 h-4 text-indigo-600" />
+                <ImageIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 รูปภาพประกอบงาน ({imageAttachments.length})
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {imageAttachments.map((img) => (
                   <div
                     key={img.id}
-                    className="group relative rounded-md overflow-hidden border border-slate-200 bg-slate-100 aspect-video flex items-center justify-center"
+                    className="group relative rounded-md overflow-hidden border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-900 aspect-video flex items-center justify-center"
                   >
                     <img
                       src={img.url}
@@ -280,21 +282,21 @@ export default function TaskDetailModal({
           {fileAttachments.length > 0 && (
             <div>
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <Paperclip className="w-4 h-4 text-indigo-600" />
+                <Paperclip className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 ไฟล์เอกสารแนบ ({fileAttachments.length})
               </h3>
               <div className="space-y-2">
                 {fileAttachments.map((file) => (
                   <div
                     key={file.id}
-                    className="flex items-center justify-between gap-3 p-3 rounded-md bg-slate-50 border border-slate-200"
+                    className="flex items-center justify-between gap-3 p-3 rounded-md bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-9 h-9 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                      <div className="w-9 h-9 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
                         <FileText className="w-5 h-5" />
                       </div>
                       <div className="min-w-0">
-                        <p className="text-xs sm:text-sm font-medium text-slate-800 truncate">
+                        <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-100 truncate">
                           {file.name}
                         </p>
                         <p className="text-[11px] text-slate-400">
@@ -305,9 +307,9 @@ export default function TaskDetailModal({
                     <a
                       href={file.url}
                       download={file.name}
-                      className="px-3 py-1.5 rounded-md bg-white border border-slate-300 hover:bg-slate-100 text-xs font-medium text-slate-700 inline-flex items-center gap-1.5 shrink-0"
+                      className="px-3 py-1.5 rounded-md bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-medium text-slate-700 dark:text-slate-200 inline-flex items-center gap-1.5 shrink-0"
                     >
-                      <Download className="w-3.5 h-3.5 text-indigo-600" />
+                      <Download className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                       ดาวน์โหลด
                     </a>
                   </div>
@@ -318,14 +320,14 @@ export default function TaskDetailModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between">
+        <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/50 flex items-center justify-between">
           <button
             type="button"
             onClick={() => {
               onClose();
               onDelete(task.id);
             }}
-            className="px-3.5 py-2 rounded-md text-xs sm:text-sm font-medium text-red-600 border border-red-200 bg-white hover:bg-red-50 inline-flex items-center gap-1.5"
+            className="px-3.5 py-2 rounded-md text-xs sm:text-sm font-medium text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 bg-white dark:bg-slate-800 hover:bg-red-50 dark:hover:bg-red-950/50 inline-flex items-center gap-1.5"
           >
             <Trash2 className="w-4 h-4" />
             ลบงานนี้
@@ -335,7 +337,7 @@ export default function TaskDetailModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-md text-xs sm:text-sm font-medium text-slate-600 border border-slate-300 bg-white hover:bg-slate-100"
+              className="px-4 py-2 rounded-md text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700"
             >
               ปิดหน้าต่าง
             </button>
