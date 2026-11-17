@@ -57,22 +57,22 @@ export default function UserAuthModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-[#18122b] rounded-lg max-w-md w-full shadow-xl border border-blue-100 dark:border-purple-800/80 overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 dark:border-purple-900/60 flex items-center justify-between bg-blue-50/40 dark:bg-[#21193a]">
-          <h2 className="text-lg font-semibold text-slate-800 dark:text-white">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-md w-full shadow-xl border border-blue-100 dark:border-slate-700 overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-blue-50/40 dark:bg-slate-900/50">
+          <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
             {mode === "register" ? "เพิ่มบัญชีผู้ใช้ใหม่" : "เข้าสู่ระบบด้วยอีเมล"}
           </h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-md"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-md"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="p-6">
-          <div className="flex rounded-md bg-slate-100 dark:bg-[#120d22] p-1 mb-5 border border-transparent dark:border-purple-900/60">
+          <div className="flex rounded-md bg-slate-100 dark:bg-slate-900 p-1 mb-5">
             <button
               type="button"
               onClick={() => {
@@ -81,8 +81,8 @@ export default function UserAuthModal({
               }}
               className={`flex-1 py-1.5 text-sm font-medium rounded-xs transition-colors flex items-center justify-center gap-1.5 ${
                 mode === "register"
-                  ? "bg-white dark:bg-purple-600 text-blue-600 dark:text-white shadow-2xs"
-                  : "text-slate-500 dark:text-purple-300/70 hover:text-slate-700 dark:hover:text-white"
+                  ? "bg-white dark:bg-[#5b5bd6] text-blue-600 dark:text-white shadow-2xs"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
               }`}
             >
               <UserPlus className="w-4 h-4" />
@@ -96,8 +96,8 @@ export default function UserAuthModal({
               }}
               className={`flex-1 py-1.5 text-sm font-medium rounded-xs transition-colors flex items-center justify-center gap-1.5 ${
                 mode === "login"
-                  ? "bg-white dark:bg-purple-600 text-blue-600 dark:text-white shadow-2xs"
-                  : "text-slate-500 dark:text-purple-300/70 hover:text-slate-700 dark:hover:text-white"
+                  ? "bg-white dark:bg-[#5b5bd6] text-blue-600 dark:text-white shadow-2xs"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
               }`}
             >
               <LogIn className="w-4 h-4" />
@@ -115,7 +115,7 @@ export default function UserAuthModal({
             {mode === "register" && (
               <>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
                     ชื่อ-นามสกุล <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -124,11 +124,11 @@ export default function UserAuthModal({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="เช่น Somchai Jaidee"
-                    className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-purple-800 bg-white dark:bg-[#120d22] text-slate-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+                    className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-indigo-500"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-1">
+                  <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
                     ตำแหน่ง / บทบาท
                   </label>
                   <input
@@ -136,14 +136,14 @@ export default function UserAuthModal({
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
                     placeholder="เช่น Backend Developer, QA Tester"
-                    className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-purple-800 bg-white dark:bg-[#120d22] text-slate-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+                    className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-indigo-500"
                   />
                 </div>
               </>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-1">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
                 อีเมล <span className="text-red-500">*</span>
               </label>
               <input
@@ -152,12 +152,12 @@ export default function UserAuthModal({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@email.com"
-                className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-purple-800 bg-white dark:bg-[#120d22] text-slate-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+                className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-1">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
                 รหัสผ่าน
               </label>
               <input
@@ -165,14 +165,14 @@ export default function UserAuthModal({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="ค่าเริ่มต้นสำหรับบัญชีทดสอบ: password123"
-                className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-purple-800 bg-white dark:bg-[#120d22] text-slate-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+                className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-indigo-500"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 bg-blue-600 dark:bg-purple-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 dark:hover:bg-purple-500 disabled:opacity-50"
+              className="w-full py-2.5 bg-blue-600 dark:bg-[#5b5bd6] text-white rounded-md text-sm font-medium hover:bg-blue-700 dark:hover:bg-[#6e6ade] disabled:opacity-50"
             >
               {loading
                 ? "กำลังดำเนินการ..."

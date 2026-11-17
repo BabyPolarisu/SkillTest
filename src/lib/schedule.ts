@@ -43,8 +43,8 @@ export function getScheduleUrgency(dueDate: string): ScheduleUrgencyInfo {
     };
   }
 
-  // Yellow: Due in 2 - 4 days
-  if (diffDays >= 2 && diffDays <= 4) {
+  // Yellow: Due in 2 - 3 days
+  if (diffDays >= 2 && diffDays <= 3) {
     return {
       diffDays,
       level: "yellow",
@@ -57,7 +57,7 @@ export function getScheduleUrgency(dueDate: string): ScheduleUrgencyInfo {
     };
   }
 
-  // Green: Due in 5+ days
+  // Green: Due in 4+ days
   return {
     diffDays,
     level: "green",

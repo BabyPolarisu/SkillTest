@@ -64,34 +64,34 @@ export default function DashboardStats({
 
   return (
     <div className="space-y-6">
-      {/* Top Stat Cards */}
+      {/* Top Stat Cards (Dark mode: original slate-800 cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white dark:bg-[#18122b] rounded-lg p-5 border border-blue-100 dark:border-purple-900/60 shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-sm text-slate-500 dark:text-purple-200/70 font-medium">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               งานทั้งหมด
             </p>
-            <p className="text-3xl font-bold text-slate-800 dark:text-white mt-1">
+            <p className="text-3xl font-bold text-slate-800 dark:text-slate-100 mt-1">
               {total}
             </p>
-            <p className="text-xs text-slate-400 dark:text-purple-300/60 mt-1">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
               สำเร็จแล้ว {completionRate}% ของทั้งหมด
             </p>
           </div>
-          <div className="w-12 h-12 rounded-md bg-blue-50 dark:bg-purple-900/50 text-blue-600 dark:text-purple-300 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-md bg-blue-50 dark:bg-indigo-950/60 text-blue-600 dark:text-indigo-300 flex items-center justify-center">
             <ListTodo className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#18122b] rounded-lg p-5 border border-blue-100 dark:border-purple-900/60 shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-sm text-slate-500 dark:text-purple-200/70 font-medium">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               รอดำเนินการ (Pending)
             </p>
             <p className="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">
               {pending}
             </p>
-            <p className="text-xs text-slate-400 dark:text-purple-300/60 mt-1">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
               {urgentTasks.length > 0
                 ? `ครบกำหนดวันนี้/พรุ่งนี้ ${urgentTasks.length} งาน`
                 : "ไม่มีงานเร่งด่วน"}
@@ -102,32 +102,32 @@ export default function DashboardStats({
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#18122b] rounded-lg p-5 border border-blue-100 dark:border-purple-900/60 shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-sm text-slate-500 dark:text-purple-200/70 font-medium">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               กำลังทำ (In Progress)
             </p>
-            <p className="text-3xl font-bold text-blue-600 dark:text-purple-400 mt-1">
+            <p className="text-3xl font-bold text-blue-600 dark:text-indigo-300 mt-1">
               {inProgress}
             </p>
-            <p className="text-xs text-slate-400 dark:text-purple-300/60 mt-1">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
               กำลังดำเนินการอยู่
             </p>
           </div>
-          <div className="w-12 h-12 rounded-md bg-blue-50 dark:bg-purple-900/50 text-blue-600 dark:text-purple-300 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-md bg-blue-50 dark:bg-indigo-950/60 text-blue-600 dark:text-indigo-300 flex items-center justify-center">
             <Clock className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-white dark:bg-[#18122b] rounded-lg p-5 border border-blue-100 dark:border-purple-900/60 shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-sm text-slate-500 dark:text-purple-200/70 font-medium">
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               เสร็จสิ้น (Completed)
             </p>
             <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">
               {completed}
             </p>
-            <div className="w-28 bg-slate-100 dark:bg-purple-950 h-2 rounded-full mt-2 overflow-hidden">
+            <div className="w-28 bg-slate-100 dark:bg-slate-700 h-2 rounded-full mt-2 overflow-hidden">
               <div
                 className="bg-emerald-500 h-full rounded-full transition-all"
                 style={{ width: `${completionRate}%` }}
@@ -143,10 +143,10 @@ export default function DashboardStats({
       {/* Category Progress & Upcoming Schedule */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Category Breakdown */}
-        <div className="bg-white dark:bg-[#18122b] rounded-lg p-5 border border-blue-100 dark:border-purple-900/60 shadow-xs">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs">
           <div className="flex items-center gap-2 mb-4">
-            <FolderKanban className="w-5 h-5 text-blue-600 dark:text-purple-400" />
-            <h3 className="font-semibold text-slate-800 dark:text-white">
+            <FolderKanban className="w-5 h-5 text-blue-600 dark:text-indigo-400" />
+            <h3 className="font-semibold text-slate-800 dark:text-slate-100">
               สัดส่วนงานแยกตามหมวดหมู่
             </h3>
           </div>
@@ -165,15 +165,15 @@ export default function DashboardStats({
                         className="w-3 h-3 rounded-full inline-block"
                         style={{ backgroundColor: cat.color }}
                       />
-                      <span className="font-medium text-slate-700 dark:text-purple-100">
+                      <span className="font-medium text-slate-700 dark:text-slate-200">
                         {cat.name}
                       </span>
                     </div>
-                    <span className="text-slate-500 dark:text-purple-300/70 text-xs">
+                    <span className="text-slate-500 dark:text-slate-400 text-xs">
                       เสร็จ {cat.completed}/{cat.total} งาน ({cat.percent}%)
                     </span>
                   </div>
-                  <div className="w-full h-2.5 bg-slate-100 dark:bg-purple-950 rounded-full overflow-hidden">
+                  <div className="w-full h-2.5 bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-300"
                       style={{
@@ -189,16 +189,16 @@ export default function DashboardStats({
         </div>
 
         {/* Upcoming Deadlines Schedule with 3-Color Indicator */}
-        <div className="bg-white dark:bg-[#18122b] rounded-lg p-5 border border-blue-100 dark:border-purple-900/60 shadow-xs">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
             <div className="flex items-center gap-2">
-              <CalendarClock className="w-5 h-5 text-blue-600 dark:text-purple-400" />
-              <h3 className="font-semibold text-slate-800 dark:text-white">
+              <CalendarClock className="w-5 h-5 text-blue-600 dark:text-indigo-400" />
+              <h3 className="font-semibold text-slate-800 dark:text-slate-100">
                 ตารางกำหนดเวลาส่งงาน (Upcoming Schedule)
               </h3>
             </div>
             {/* 3-Color Legend */}
-            <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-600 dark:text-purple-200/80">
+            <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-600 dark:text-slate-400">
               <span className="inline-flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
                 วันนี้/พรุ่งนี้
@@ -227,13 +227,13 @@ export default function DashboardStats({
                     key={task.id}
                     type="button"
                     onClick={() => onSelectTask && onSelectTask(task)}
-                    className="w-full text-left p-3 rounded-md border border-slate-200/90 dark:border-purple-800/60 bg-slate-50/70 dark:bg-[#21193a] hover:bg-blue-50/60 dark:hover:bg-[#2a2048] hover:border-blue-300 dark:hover:border-purple-500 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                    className="w-full text-left p-3 rounded-md border border-slate-200/90 dark:border-slate-700 bg-slate-50/70 dark:bg-slate-900/60 hover:bg-blue-50/60 dark:hover:bg-slate-700/60 hover:border-blue-300 dark:hover:border-indigo-500/60 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-slate-800 dark:text-white truncate">
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
                         {task.title}
                       </p>
-                      <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-slate-500 dark:text-purple-200/70">
+                      <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-slate-500 dark:text-slate-400">
                         <span>เจ้าของ: {getUserName(task.ownerId)}</span>
                         {task.taggedUserIds.length > 0 && (
                           <span>
@@ -244,7 +244,7 @@ export default function DashboardStats({
                       </div>
                     </div>
 
-                    {/* 3-Color Prominent Square Schedule Badge (Dark-safe) */}
+                    {/* 3-Color Prominent Square Schedule Badge */}
                     <div
                       className={`shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-md border ${urgency.boxClass}`}
                     >

@@ -43,7 +43,7 @@ export default function HomePage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Theme state (White-Blue Light Theme vs Dark-Purple Theme)
+  // Theme state (White-Blue Light Theme vs Original Slate Dark Theme with Soft Violet Buttons)
   const [isDark, setIsDark] = useState(false);
 
   // UI Modals & Tabs
@@ -406,10 +406,10 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#edf4fc] dark:bg-[#0f0b1d]">
+      <div className="min-h-screen flex items-center justify-center bg-[#edf4fc] dark:bg-slate-900">
         <div className="text-center space-y-2">
-          <div className="w-8 h-8 border-3 border-blue-600 dark:border-purple-500 border-t-transparent rounded-full animate-spin mx-auto" />
-          <p className="text-sm text-slate-500 dark:text-purple-200">
+          <div className="w-8 h-8 border-3 border-blue-600 dark:border-indigo-400 border-t-transparent rounded-full animate-spin mx-auto" />
+          <p className="text-sm text-slate-500 dark:text-slate-400">
             กำลังโหลดข้อมูลระบบ...
           </p>
         </div>
@@ -418,19 +418,19 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#edf4fc] dark:bg-[#0f0b1d] text-slate-800 dark:text-slate-100 flex flex-col transition-colors">
-      {/* Top Navbar (Light: White/Blue | Dark: Deep Purple) */}
-      <header className="bg-white dark:bg-[#18122b]/95 border-b border-blue-100 dark:border-purple-900/60 sticky top-0 z-30 shadow-2xs">
+    <div className="min-h-screen bg-[#edf4fc] dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col transition-colors">
+      {/* Top Navbar (Light: White/Blue | Dark: Original Slate-800 with Soft Violet Buttons) */}
+      <header className="bg-white dark:bg-slate-800/95 border-b border-blue-100 dark:border-slate-700/80 sticky top-0 z-30 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-md bg-blue-600 dark:bg-purple-600 flex items-center justify-center text-white shadow-xs">
+            <div className="w-9 h-9 rounded-md bg-blue-600 dark:bg-[#5b5bd6] flex items-center justify-center text-white shadow-xs">
               <CheckSquare className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-base sm:text-lg font-bold text-blue-950 dark:text-white leading-tight">
+              <h1 className="text-base sm:text-lg font-bold text-blue-950 dark:text-slate-100 leading-tight">
                 TaskFlow
               </h1>
-              <p className="text-xs text-slate-500 dark:text-purple-300/70 hidden sm:block">
+              <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
                 ระบบจัดการรายการงานและตารางเวลาส่วนตัว
               </p>
             </div>
@@ -442,11 +442,9 @@ export default function HomePage() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 rounded-md border border-blue-200 dark:border-purple-700 bg-blue-50/50 dark:bg-[#21193a] hover:bg-blue-100/70 dark:hover:bg-purple-900/60 text-blue-700 dark:text-purple-200 transition-colors"
+              className="p-2 rounded-md border border-blue-200 dark:border-slate-700 bg-blue-50/50 dark:bg-slate-900 hover:bg-blue-100/70 dark:hover:bg-slate-700 text-blue-700 dark:text-slate-300 transition-colors"
               title={
-                isDark
-                  ? "สลับเป็นธีมขาว-น้ำเงิน"
-                  : "สลับเป็นธีมมืด-สีม่วง (Dark Purple)"
+                isDark ? "สลับเป็นธีมขาว-น้ำเงิน" : "สลับเป็นโหมดมืดถนอมสายตา"
               }
             >
               {isDark ? (
@@ -461,22 +459,22 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setIsNotifOpen((prev) => !prev)}
-                className="relative p-2 rounded-md border border-blue-200 dark:border-purple-700 bg-blue-50/50 dark:bg-[#21193a] hover:bg-blue-100/70 dark:hover:bg-purple-900/60 text-blue-700 dark:text-purple-200 transition-colors"
+                className="relative p-2 rounded-md border border-blue-200 dark:border-slate-700 bg-blue-50/50 dark:bg-slate-900 hover:bg-blue-100/70 dark:hover:bg-slate-700 text-blue-700 dark:text-slate-300 transition-colors"
                 title="การแจ้งเตือนงานที่ถูกแท็ก"
               >
                 <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
                 {unreadTaggedTasks.length > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-[#18122b] shadow-xs">
+                  <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-slate-800 shadow-xs">
                     {unreadTaggedTasks.length}
                   </span>
                 )}
               </button>
 
               {isNotifOpen && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-[#18122b] rounded-lg shadow-xl border border-blue-100 dark:border-purple-800 z-50 overflow-hidden">
-                  <div className="px-4 py-3 border-b border-slate-100 dark:border-purple-900/60 flex items-center justify-between bg-blue-50/50 dark:bg-[#21193a]">
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-blue-100 dark:border-slate-700 z-50 overflow-hidden">
+                  <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-blue-50/50 dark:bg-slate-900/50">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-slate-800 dark:text-white">
+                      <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                         งานที่คุณถูกแท็ก
                       </span>
                       {unreadTaggedTasks.length > 0 && (
@@ -489,7 +487,7 @@ export default function HomePage() {
                       <button
                         type="button"
                         onClick={markAllNotifsAsRead}
-                        className="px-2 py-1 rounded-md text-xs text-blue-600 dark:text-purple-300 hover:bg-blue-50 dark:hover:bg-purple-900/50 font-medium inline-flex items-center gap-1"
+                        className="px-2 py-1 rounded-md text-xs text-blue-600 dark:text-indigo-300 hover:bg-blue-50 dark:hover:bg-slate-700 font-medium inline-flex items-center gap-1"
                       >
                         <CheckCheck className="w-3.5 h-3.5" />
                         อ่านทั้งหมด
@@ -497,9 +495,9 @@ export default function HomePage() {
                     )}
                   </div>
 
-                  <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-purple-900/50">
+                  <div className="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700">
                     {taggedTasksForMe.length === 0 ? (
-                      <div className="py-8 px-4 text-center text-xs text-slate-400 dark:text-purple-300/60">
+                      <div className="py-8 px-4 text-center text-xs text-slate-400">
                         ยังไม่มีรายการงานที่คุณถูกแท็ก
                       </div>
                     ) : (
@@ -514,9 +512,9 @@ export default function HomePage() {
                             key={t.id}
                             type="button"
                             onClick={() => jumpToTask(t)}
-                            className={`w-full text-left px-4 py-3 hover:bg-blue-50/50 dark:hover:bg-[#251b42] transition-colors flex items-start gap-3 ${
+                            className={`w-full text-left px-4 py-3 hover:bg-blue-50/50 dark:hover:bg-slate-700/60 transition-colors flex items-start gap-3 ${
                               isUnread
-                                ? "bg-blue-50/40 dark:bg-[#21193a]"
+                                ? "bg-blue-50/40 dark:bg-slate-900/50"
                                 : ""
                             }`}
                           >
@@ -525,16 +523,16 @@ export default function HomePage() {
                               className={`w-2.5 h-2.5 rounded-full mt-1.5 shrink-0 ${
                                 isUnread
                                   ? "bg-red-500"
-                                  : "bg-slate-300 dark:bg-purple-800"
+                                  : "bg-slate-300 dark:bg-slate-600"
                               }`}
                             />
                             <div className="flex-1 min-w-0">
-                              <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-white truncate">
+                              <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-100 truncate">
                                 {t.title}
                               </p>
-                              <p className="text-xs text-slate-500 dark:text-purple-200/70 mt-0.5">
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                                 แท็กโดย{" "}
-                                <span className="font-medium text-slate-700 dark:text-purple-100">
+                                <span className="font-medium text-slate-700 dark:text-slate-200">
                                   {owner?.name || "ไม่ระบุ"}
                                 </span>
                               </p>
@@ -544,7 +542,7 @@ export default function HomePage() {
                                 >
                                   {t.dueDate} ({urgency.label}) • {t.dueTime} น.
                                 </span>
-                                <span className="text-[11px] text-blue-600 dark:text-purple-300 font-semibold">
+                                <span className="text-[11px] text-blue-600 dark:text-indigo-300 font-semibold">
                                   เปิดดูงาน →
                                 </span>
                               </div>
@@ -558,14 +556,14 @@ export default function HomePage() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 bg-blue-50/70 dark:bg-[#21193a] rounded-md px-2.5 py-1.5 border border-blue-200 dark:border-purple-700">
+            <div className="flex items-center gap-2 bg-blue-50/70 dark:bg-slate-900 rounded-md px-2.5 py-1.5 border border-blue-200 dark:border-slate-700">
               <span
                 className="w-2.5 h-2.5 rounded-full shrink-0"
                 style={{
                   backgroundColor: currentUser?.avatarColor || "#2563eb",
                 }}
               />
-              <span className="text-xs text-slate-500 dark:text-purple-200/70 hidden md:inline">
+              <span className="text-xs text-slate-500 dark:text-slate-400 hidden md:inline">
                 ผู้ใช้งาน:
               </span>
               <select
@@ -578,13 +576,13 @@ export default function HomePage() {
                     resetFilters();
                   }
                 }}
-                className="bg-transparent text-xs sm:text-sm font-medium text-blue-950 dark:text-white focus:outline-none cursor-pointer"
+                className="bg-transparent text-xs sm:text-sm font-medium text-blue-950 dark:text-slate-100 focus:outline-none cursor-pointer"
               >
                 {users.map((u) => (
                   <option
                     key={u.id}
                     value={u.id}
-                    className="bg-white dark:bg-[#18122b] text-slate-800 dark:text-white"
+                    className="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                   >
                     {u.name} ({u.role})
                   </option>
@@ -595,9 +593,9 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => setIsAuthModalOpen(true)}
-              className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-purple-700 bg-blue-50/60 dark:bg-[#21193a] hover:bg-blue-100/80 dark:hover:bg-purple-900/60 text-xs sm:text-sm font-medium text-blue-800 dark:text-purple-100 inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-indigo-500/40 bg-blue-50/60 dark:bg-[#252447] hover:bg-blue-100/80 dark:hover:bg-[#302e5c] text-xs sm:text-sm font-medium text-blue-800 dark:text-indigo-200 inline-flex items-center gap-1.5"
             >
-              <UserPlus className="w-4 h-4 text-blue-600 dark:text-purple-400" />
+              <UserPlus className="w-4 h-4 text-blue-600 dark:text-indigo-300" />
               <span className="hidden sm:inline">เพิ่ม/สลับบัญชี</span>
             </button>
           </div>
@@ -633,7 +631,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={markAllNotifsAsRead}
-                className="px-3 py-1.5 rounded-md border border-red-200 dark:border-red-700 bg-white dark:bg-[#18122b] text-xs font-medium text-red-700 dark:text-red-200 hover:bg-red-100 dark:hover:bg-red-950 transition-colors"
+                className="px-3 py-1.5 rounded-md border border-red-200 dark:border-red-700 bg-white dark:bg-slate-800 text-xs font-medium text-red-700 dark:text-red-200 hover:bg-red-100 dark:hover:bg-slate-700 transition-colors"
               >
                 รับทราบ
               </button>
@@ -641,13 +639,13 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* Action Header Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#18122b] p-4 sm:p-5 rounded-lg border border-blue-100 dark:border-purple-900/60 shadow-xs">
+        {/* Action Header Bar (Eye-care Soft Violet Buttons in Dark Mode) */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800/90 p-4 sm:p-5 rounded-lg border border-blue-100 dark:border-slate-700/80 shadow-xs">
           <div>
-            <h2 className="text-lg font-bold text-blue-950 dark:text-white">
+            <h2 className="text-lg font-bold text-blue-950 dark:text-slate-100">
               สวัสดี, {currentUser?.name}
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-purple-200/70">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
               จัดการงานของคุณ แนบรูปภาพ/ไฟล์งาน แท็กผู้ที่เกี่ยวข้อง และติดตามตารางเวลาได้ในที่เดียว
             </p>
           </div>
@@ -658,8 +656,8 @@ export default function HomePage() {
               onClick={() => setShowDashboard((prev) => !prev)}
               className={`px-3.5 py-2 rounded-md text-xs sm:text-sm font-medium border transition-colors inline-flex items-center gap-1.5 ${
                 showDashboard
-                  ? "bg-blue-50 dark:bg-purple-900/50 text-blue-700 dark:text-purple-200 border-blue-200 dark:border-purple-600"
-                  : "bg-white dark:bg-[#21193a] text-slate-700 dark:text-purple-200 border-slate-300 dark:border-purple-800 hover:bg-slate-50 dark:hover:bg-purple-900/40"
+                  ? "bg-blue-50 dark:bg-[#252447] text-blue-700 dark:text-indigo-200 border-blue-200 dark:border-indigo-500/40"
+                  : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
               }`}
             >
               <LayoutDashboard className="w-4 h-4" />
@@ -672,7 +670,7 @@ export default function HomePage() {
                 setEditingTask(null);
                 setIsTaskModalOpen(true);
               }}
-              className="px-4 py-2 rounded-md text-xs sm:text-sm font-medium bg-blue-600 dark:bg-purple-600 text-white hover:bg-blue-700 dark:hover:bg-purple-500 shadow-xs inline-flex items-center gap-1.5"
+              className="px-4 py-2 rounded-md text-xs sm:text-sm font-medium bg-blue-600 dark:bg-[#5b5bd6] text-white hover:bg-blue-700 dark:hover:bg-[#6e6ade] shadow-xs inline-flex items-center gap-1.5 transition-colors"
             >
               <Plus className="w-4 h-4" />
               เพิ่มงานใหม่
@@ -692,11 +690,11 @@ export default function HomePage() {
         )}
 
         {/* Smart Search & Filter Controls */}
-        <div className="bg-white dark:bg-[#18122b] rounded-lg p-4 sm:p-5 border border-blue-100 dark:border-purple-900/60 shadow-xs space-y-4">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-4 sm:p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs space-y-4">
           <div className="flex flex-col md:flex-row gap-3">
             {/* Smart Search Input with Dropdown for People & Tasks */}
             <div className="relative flex-1" ref={searchContainerRef}>
-              <Search className="w-4 h-4 text-blue-500 dark:text-purple-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-blue-500 dark:text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
@@ -706,14 +704,14 @@ export default function HomePage() {
                   setIsSearchDropdownOpen(true);
                 }}
                 placeholder="ค้นหาชื่อคน (ผู้สร้าง/ผู้ถูกแท็ก) หรือพิมพ์ค้นหาชื่องาน..."
-                className="w-full pl-9 pr-16 py-2 rounded-md border border-blue-200 dark:border-purple-800 bg-blue-50/30 dark:bg-[#120d22] text-slate-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+                className="w-full pl-9 pr-16 py-2 rounded-md border border-blue-200 dark:border-slate-600 bg-blue-50/30 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-indigo-500"
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery("")}
-                    className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-white rounded-xs"
+                    className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xs"
                     title="ล้างคำค้นหา"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -722,7 +720,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setIsSearchDropdownOpen((prev) => !prev)}
-                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-white rounded-xs"
+                  className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-xs"
                   title="เปิดรายการตัวเลือก"
                 >
                   <ChevronDown className="w-4 h-4" />
@@ -731,11 +729,11 @@ export default function HomePage() {
 
               {/* Autocomplete Dropdown */}
               {isSearchDropdownOpen && (
-                <div className="absolute left-0 right-0 mt-1.5 bg-white dark:bg-[#18122b] rounded-lg shadow-xl border border-blue-100 dark:border-purple-800 z-40 max-h-96 overflow-y-auto divide-y divide-slate-100 dark:divide-purple-900/50">
+                <div className="absolute left-0 right-0 mt-1.5 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-blue-100 dark:border-slate-700 z-40 max-h-96 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700">
                   {/* People Section */}
                   <div className="p-2.5">
-                    <p className="px-2 py-1 text-[11px] font-semibold text-slate-400 dark:text-purple-300/70 uppercase tracking-wider flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-blue-600 dark:text-purple-400" />
+                    <p className="px-2 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-blue-600 dark:text-indigo-400" />
                       ค้นหาตามรายชื่อผู้ใช้งาน ({searchSuggestions.matchedUsers.length})
                     </p>
                     {searchSuggestions.matchedUsers.length === 0 ? (
@@ -762,8 +760,8 @@ export default function HomePage() {
                               }}
                               className={`flex items-center justify-between px-3 py-2 rounded-md border text-left transition-colors ${
                                 isSelected
-                                  ? "bg-blue-50 dark:bg-purple-900/60 text-blue-700 dark:text-purple-200 border-blue-300 dark:border-purple-500"
-                                  : "bg-white dark:bg-[#21193a] hover:bg-blue-50/50 dark:hover:bg-[#2a2048] text-slate-700 dark:text-purple-100 border-slate-200 dark:border-purple-800"
+                                  ? "bg-blue-50 dark:bg-[#252447] text-blue-700 dark:text-indigo-200 border-blue-300 dark:border-indigo-500/50"
+                                  : "bg-white dark:bg-slate-800 hover:bg-blue-50/50 dark:hover:bg-slate-700/70 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700"
                               }`}
                             >
                               <div className="flex items-center gap-2 min-w-0">
@@ -775,12 +773,12 @@ export default function HomePage() {
                                   <p className="text-xs font-semibold truncate">
                                     {u.name}
                                   </p>
-                                  <p className="text-[11px] text-slate-400 dark:text-purple-300/60 truncate">
+                                  <p className="text-[11px] text-slate-400 truncate">
                                     {u.role}
                                   </p>
                                 </div>
                               </div>
-                              <span className="text-[11px] px-2 py-0.5 rounded-xs bg-blue-50 dark:bg-purple-950 text-blue-700 dark:text-purple-300 font-medium shrink-0">
+                              <span className="text-[11px] px-2 py-0.5 rounded-xs bg-blue-50 dark:bg-slate-700 text-blue-700 dark:text-slate-300 font-medium shrink-0">
                                 {userTaskCount} งาน
                               </span>
                             </button>
@@ -792,8 +790,8 @@ export default function HomePage() {
 
                   {/* Tasks Section */}
                   <div className="p-2.5">
-                    <p className="px-2 py-1 text-[11px] font-semibold text-slate-400 dark:text-purple-300/70 uppercase tracking-wider flex items-center gap-1.5">
-                      <CheckSquare className="w-3.5 h-3.5 text-blue-600 dark:text-purple-400" />
+                    <p className="px-2 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <CheckSquare className="w-3.5 h-3.5 text-blue-600 dark:text-indigo-400" />
                       รายการงานที่ตรงกับคำค้นหา ({searchSuggestions.matchedTasks.length})
                     </p>
                     {searchSuggestions.matchedTasks.length === 0 ? (
@@ -810,7 +808,7 @@ export default function HomePage() {
                               key={t.id}
                               type="button"
                               onClick={() => jumpToTask(t)}
-                              className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-md border border-transparent hover:border-blue-200 dark:hover:border-purple-700 hover:bg-blue-50/40 dark:hover:bg-[#21193a] text-left transition-colors"
+                              className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-md border border-transparent hover:border-blue-200 dark:hover:border-slate-700 hover:bg-blue-50/40 dark:hover:bg-slate-700/60 text-left transition-colors"
                             >
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2">
@@ -820,15 +818,15 @@ export default function HomePage() {
                                       style={{ backgroundColor: cat.color }}
                                     />
                                   )}
-                                  <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-white truncate">
+                                  <p className="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-100 truncate">
                                     {t.title}
                                   </p>
                                 </div>
-                                <p className="text-[11px] text-slate-400 dark:text-purple-300/70 mt-0.5 truncate">
+                                <p className="text-[11px] text-slate-400 mt-0.5 truncate">
                                   ผู้สร้าง: {owner?.name} • กำหนดส่ง {t.dueDate} ({t.dueTime} น.)
                                 </p>
                               </div>
-                              <span className="px-2.5 py-1 rounded-xs bg-blue-50 dark:bg-purple-900/60 text-[11px] text-blue-600 dark:text-purple-200 font-semibold shrink-0">
+                              <span className="px-2.5 py-1 rounded-xs bg-blue-50 dark:bg-[#252447] text-[11px] text-blue-600 dark:text-indigo-200 font-semibold shrink-0">
                                 เปิดดู →
                               </span>
                             </button>
@@ -842,14 +840,14 @@ export default function HomePage() {
             </div>
 
             {/* Scope Tabs (Rectangular Buttons + Circular Notification Dot) */}
-            <div className="flex rounded-md bg-blue-50/70 dark:bg-[#120d22] p-1 shrink-0 border border-blue-200/80 dark:border-purple-800">
+            <div className="flex rounded-md bg-blue-50/70 dark:bg-slate-900 p-1 shrink-0 border border-blue-200/80 dark:border-slate-700">
               <button
                 type="button"
                 onClick={() => setScopeFilter("all")}
                 className={`px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
                   scopeFilter === "all"
-                    ? "bg-blue-600 dark:bg-purple-600 text-white shadow-2xs"
-                    : "text-slate-600 dark:text-purple-300/80 hover:text-blue-700 dark:hover:text-white"
+                    ? "bg-blue-600 dark:bg-[#5b5bd6] text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-slate-200"
                 }`}
               >
                 ทั้งหมด ({tasks.length})
@@ -859,8 +857,8 @@ export default function HomePage() {
                 onClick={() => setScopeFilter("mine")}
                 className={`px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
                   scopeFilter === "mine"
-                    ? "bg-blue-600 dark:bg-purple-600 text-white shadow-2xs"
-                    : "text-slate-600 dark:text-purple-300/80 hover:text-blue-700 dark:hover:text-white"
+                    ? "bg-blue-600 dark:bg-[#5b5bd6] text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-slate-200"
                 }`}
               >
                 งานของฉัน (
@@ -874,8 +872,8 @@ export default function HomePage() {
                 }}
                 className={`relative px-3 py-1.5 rounded-xs text-xs font-medium transition-colors inline-flex items-center gap-1.5 ${
                   scopeFilter === "tagged"
-                    ? "bg-blue-600 dark:bg-purple-600 text-white shadow-2xs"
-                    : "text-slate-600 dark:text-purple-300/80 hover:text-blue-700 dark:hover:text-white"
+                    ? "bg-blue-600 dark:bg-[#5b5bd6] text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-slate-200"
                 }`}
               >
                 <span>
@@ -905,8 +903,8 @@ export default function HomePage() {
               onClick={() => setCategoryFilter("all")}
               className={`px-3.5 py-2 rounded-md text-xs font-semibold border transition-colors ${
                 categoryFilter === "all"
-                  ? "bg-blue-600 dark:bg-purple-600 text-white border-blue-600 dark:border-purple-500 shadow-2xs"
-                  : "bg-blue-50/50 dark:bg-[#21193a] text-slate-700 dark:text-purple-200 border-blue-200 dark:border-purple-800 hover:bg-blue-100/60 dark:hover:bg-purple-900/50"
+                  ? "bg-blue-600 dark:bg-[#5b5bd6] text-white border-blue-600 dark:border-[#6e6ade] shadow-2xs"
+                  : "bg-blue-50/50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-blue-200 dark:border-slate-700 hover:bg-blue-100/60 dark:hover:bg-slate-700"
               }`}
             >
               ทุกหมวดหมู่ ({tasks.length})
@@ -922,7 +920,7 @@ export default function HomePage() {
                   className={`px-3.5 py-2 rounded-md text-xs font-semibold border transition-colors inline-flex items-center gap-2 ${
                     active
                       ? "text-white border-transparent shadow-2xs"
-                      : "bg-white dark:bg-[#21193a] text-slate-700 dark:text-purple-100 border-blue-200/80 dark:border-purple-800 hover:bg-blue-50/50 dark:hover:bg-purple-900/50"
+                      : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-blue-200/80 dark:border-slate-700 hover:bg-blue-50/50 dark:hover:bg-slate-700"
                   }`}
                   style={active ? { backgroundColor: cat.color } : undefined}
                 >
@@ -937,7 +935,7 @@ export default function HomePage() {
                     className={`px-1.5 py-0.2 rounded-xs text-[11px] ${
                       active
                         ? "bg-white/20 text-white"
-                        : "bg-blue-50 dark:bg-[#120d22] text-blue-700 dark:text-purple-300"
+                        : "bg-blue-50 dark:bg-slate-800 text-blue-700 dark:text-slate-400"
                     }`}
                   >
                     {count}
@@ -948,16 +946,16 @@ export default function HomePage() {
           </div>
 
           {/* Secondary Filter Dropdowns (Status & Person) */}
-          <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 dark:border-purple-900/60">
-            <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-purple-300/70">
-              <Filter className="w-3.5 h-3.5 text-blue-600 dark:text-purple-400" />
+          <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-700">
+            <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
+              <Filter className="w-3.5 h-3.5 text-blue-600 dark:text-indigo-400" />
               ตัวกรองเพิ่มเติม:
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-purple-800 text-xs sm:text-sm bg-blue-50/40 dark:bg-[#120d22] text-slate-700 dark:text-purple-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+              className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-slate-700 text-xs sm:text-sm bg-blue-50/40 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-indigo-500"
             >
               <option value="all">ทุกสถานะ</option>
               <option value="pending">รอดำเนินการ (Pending)</option>
@@ -968,7 +966,7 @@ export default function HomePage() {
             <select
               value={personFilter}
               onChange={(e) => setPersonFilter(e.target.value)}
-              className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-purple-800 text-xs sm:text-sm bg-blue-50/40 dark:bg-[#120d22] text-slate-700 dark:text-purple-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
+              className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-slate-700 text-xs sm:text-sm bg-blue-50/40 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-indigo-500"
             >
               <option value="all">บุคคลที่เกี่ยวข้องทั้งหมด</option>
               {users.map((u) => (
@@ -979,7 +977,7 @@ export default function HomePage() {
             </select>
 
             {selectedPersonObj && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-blue-50 dark:bg-purple-900/50 text-blue-700 dark:text-purple-200 border border-blue-200 dark:border-purple-700">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-blue-50 dark:bg-[#252447] text-blue-700 dark:text-indigo-200 border border-blue-200 dark:border-indigo-500/40">
                 <span
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: selectedPersonObj.avatarColor }}
@@ -1003,7 +1001,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-purple-700 bg-blue-50 dark:bg-purple-900/50 text-xs text-blue-700 dark:text-purple-200 hover:bg-blue-100 dark:hover:bg-purple-800/60 font-medium inline-flex items-center gap-1 ml-auto"
+                className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-indigo-500/40 bg-blue-50 dark:bg-[#252447] text-xs text-blue-700 dark:text-indigo-200 hover:bg-blue-100 dark:hover:bg-[#302e5c] font-medium inline-flex items-center gap-1 ml-auto"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 ล้างตัวกรองทั้งหมด
@@ -1015,12 +1013,12 @@ export default function HomePage() {
         {/* Task List */}
         <div className="space-y-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
-            <h3 className="text-sm font-semibold text-blue-950 dark:text-purple-100">
+            <h3 className="text-sm font-semibold text-blue-950 dark:text-slate-200">
               รายการงาน ({filteredTasks.length} รายการ)
             </h3>
 
             {/* 3-Color Due Date Legend */}
-            <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-600 dark:text-purple-200/80">
+            <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-600 dark:text-slate-400">
               <span>สีวันครบกำหนด:</span>
               <span className="inline-flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
@@ -1038,14 +1036,14 @@ export default function HomePage() {
           </div>
 
           {filteredTasks.length === 0 ? (
-            <div className="bg-white dark:bg-[#18122b] rounded-lg border border-blue-100 dark:border-purple-900/60 p-12 text-center space-y-3">
-              <p className="text-slate-500 dark:text-purple-300/70 text-sm">
+            <div className="bg-white dark:bg-slate-800/90 rounded-lg border border-blue-100 dark:border-slate-700 p-12 text-center space-y-3">
+              <p className="text-slate-500 dark:text-slate-400 text-sm">
                 ไม่พบรายการงานที่ตรงกับเงื่อนไขการค้นหา
               </p>
               <button
                 type="button"
                 onClick={resetFilters}
-                className="px-4 py-2 rounded-md text-xs font-medium bg-blue-50 dark:bg-purple-900/60 text-blue-600 dark:text-purple-200 border border-blue-200 dark:border-purple-700 hover:bg-blue-100 inline-flex items-center gap-1.5"
+                className="px-4 py-2 rounded-md text-xs font-medium bg-blue-50 dark:bg-[#252447] text-blue-600 dark:text-indigo-200 border border-blue-200 dark:border-indigo-500/40 hover:bg-blue-100 inline-flex items-center gap-1.5"
               >
                 <RotateCcw className="w-4 h-4" />
                 แสดงงานทั้งหมด
@@ -1077,7 +1075,7 @@ export default function HomePage() {
                   },
                   low: {
                     label: "ทั่วไป",
-                    cls: "bg-slate-100 dark:bg-[#251d3d] text-slate-600 dark:text-purple-200 border-slate-200 dark:border-purple-700",
+                    cls: "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600",
                   },
                 }[task.priority];
 
@@ -1089,14 +1087,14 @@ export default function HomePage() {
                       if (isUnreadTagged) markTaskAsRead(task.id);
                       setViewingTaskId(task.id);
                     }}
-                    className={`bg-white dark:bg-[#18122b] rounded-lg p-4 sm:p-5 border transition-all shadow-xs hover:shadow-md cursor-pointer ${
+                    className={`bg-white dark:bg-slate-800/95 rounded-lg p-4 sm:p-5 border transition-all shadow-xs hover:shadow-md cursor-pointer ${
                       isHighlighted
-                        ? "border-blue-500 dark:border-purple-500 ring-2 ring-blue-200 dark:ring-purple-700"
+                        ? "border-blue-500 dark:border-indigo-400 ring-2 ring-blue-200 dark:ring-indigo-800"
                         : task.status === "completed"
-                        ? "border-slate-200/70 dark:border-purple-900/40 bg-slate-50/70 dark:bg-[#140f24]"
+                        ? "border-slate-200/70 dark:border-slate-700/60 bg-slate-50/70 dark:bg-slate-800/50"
                         : isUnreadTagged
                         ? "border-red-300 dark:border-red-500/80 ring-1 ring-red-100 dark:ring-red-900/40"
-                        : "border-blue-100 dark:border-purple-900/60 hover:border-blue-300 dark:hover:border-purple-600"
+                        : "border-blue-100 dark:border-slate-700/80 hover:border-blue-300 dark:hover:border-slate-600"
                     }`}
                   >
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -1126,14 +1124,14 @@ export default function HomePage() {
                           </span>
 
                           {task.ownerId !== currentUser?.id && (
-                            <span className="px-2.5 py-1 rounded-xs text-xs font-medium bg-blue-50 dark:bg-purple-900/50 text-blue-700 dark:text-purple-200 border border-blue-200 dark:border-purple-700">
+                            <span className="px-2.5 py-1 rounded-xs text-xs font-medium bg-blue-50 dark:bg-[#252447] text-blue-700 dark:text-indigo-200 border border-blue-200 dark:border-indigo-500/40">
                               แท็กโดย {owner?.name}
                             </span>
                           )}
 
                           {attachments.length > 0 && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xs text-xs font-medium bg-slate-100 dark:bg-[#251d3d] text-slate-700 dark:text-purple-200 border border-slate-200 dark:border-purple-700">
-                              <Paperclip className="w-3 h-3 text-blue-600 dark:text-purple-400" />
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xs text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600">
+                              <Paperclip className="w-3 h-3 text-blue-600 dark:text-indigo-300" />
                               {attachments.length} ไฟล์แนบ
                             </span>
                           )}
@@ -1144,14 +1142,14 @@ export default function HomePage() {
                           <h4
                             className={`text-base font-bold ${
                               task.status === "completed"
-                                ? "line-through text-slate-400 dark:text-purple-400/50"
-                                : "text-slate-800 dark:text-white"
+                                ? "line-through text-slate-400 dark:text-slate-500"
+                                : "text-slate-800 dark:text-slate-100"
                             }`}
                           >
                             {task.title}
                           </h4>
                           {task.description && (
-                            <p className="text-sm text-slate-600 dark:text-purple-200/80 mt-1 leading-relaxed line-clamp-2">
+                            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1 leading-relaxed line-clamp-2">
                               {task.description}
                             </p>
                           )}
@@ -1165,18 +1163,18 @@ export default function HomePage() {
                                 key={img.id}
                                 src={img.url}
                                 alt={img.name}
-                                className="w-14 h-14 rounded-md object-cover border border-slate-200 dark:border-purple-800"
+                                className="w-14 h-14 rounded-md object-cover border border-slate-200 dark:border-slate-700"
                               />
                             ))}
                           </div>
                         )}
 
                         {/* Tagged Users Info */}
-                        <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-500 dark:text-purple-300/70">
+                        <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-500 dark:text-slate-400">
                           <span>ผู้สร้าง: {owner?.name}</span>
                           {task.taggedUserIds.length > 0 && (
                             <div className="inline-flex items-center gap-1.5 flex-wrap">
-                              <Users className="w-3.5 h-3.5 text-slate-400 dark:text-purple-400" />
+                              <Users className="w-3.5 h-3.5 text-slate-400" />
                               <span>ผู้ที่เกี่ยวข้อง:</span>
                               {task.taggedUserIds.map((uid) => {
                                 const u = getUserById(uid);
@@ -1184,7 +1182,7 @@ export default function HomePage() {
                                 return (
                                   <span
                                     key={uid}
-                                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-blue-50/60 dark:bg-[#251d3d] border border-blue-200/70 dark:border-purple-700 text-slate-700 dark:text-purple-100 font-medium"
+                                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-blue-50/60 dark:bg-slate-700/80 border border-blue-200/70 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium"
                                   >
                                     <span
                                       className="w-2 h-2 rounded-full"
@@ -1202,13 +1200,13 @@ export default function HomePage() {
                       {/* 3-Color Prominent Schedule Box + Right Action Buttons */}
                       <div
                         onClick={(e) => e.stopPropagation()}
-                        className="flex flex-wrap sm:flex-nowrap items-center justify-between lg:justify-end gap-3 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100 dark:border-purple-900/50"
+                        className="flex flex-wrap sm:flex-nowrap items-center justify-between lg:justify-end gap-3 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100 dark:border-slate-700"
                       >
                         {/* 3-Color Square Schedule Display (Dark-safe) */}
                         <div
                           className={`px-3.5 py-2 rounded-md border flex items-center gap-3 ${
                             task.status === "completed"
-                              ? "bg-slate-100 dark:bg-[#21193a] text-slate-500 dark:text-purple-300/60 border-slate-200 dark:border-purple-800/60"
+                              ? "bg-slate-100 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700"
                               : urgency.boxClass
                           }`}
                         >
@@ -1217,7 +1215,7 @@ export default function HomePage() {
                               <Calendar
                                 className={`w-3.5 h-3.5 ${
                                   task.status === "completed"
-                                    ? "text-slate-400 dark:text-purple-400/50"
+                                    ? "text-slate-400"
                                     : urgency.iconClass
                                 }`}
                               />
@@ -1233,7 +1231,7 @@ export default function HomePage() {
                             <div
                               className={`flex items-center gap-1.5 text-sm font-bold mt-0.5 ${
                                 task.status === "completed"
-                                  ? "text-slate-500 dark:text-purple-300/60"
+                                  ? "text-slate-500"
                                   : urgency.textClass
                               }`}
                             >
@@ -1257,25 +1255,25 @@ export default function HomePage() {
                               task.status === "completed"
                                 ? "bg-emerald-50 dark:bg-[#0f2920] text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-600"
                                 : task.status === "in_progress"
-                                ? "bg-blue-50 dark:bg-[#251b45] text-blue-700 dark:text-purple-300 border-blue-300 dark:border-purple-500"
+                                ? "bg-blue-50 dark:bg-slate-700 text-blue-700 dark:text-indigo-300 border-blue-300 dark:border-indigo-500/60"
                                 : "bg-amber-50 dark:bg-[#2b2110] text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-600"
                             }`}
                           >
                             <option
                               value="pending"
-                              className="bg-white dark:bg-[#18122b] text-slate-800 dark:text-white"
+                              className="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                             >
                               รอดำเนินการ (Pending)
                             </option>
                             <option
                               value="in_progress"
-                              className="bg-white dark:bg-[#18122b] text-slate-800 dark:text-white"
+                              className="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                             >
                               กำลังทำ (In Progress)
                             </option>
                             <option
                               value="completed"
-                              className="bg-white dark:bg-[#18122b] text-slate-800 dark:text-white"
+                              className="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100"
                             >
                               เสร็จสิ้น (Completed)
                             </option>
@@ -1285,7 +1283,7 @@ export default function HomePage() {
                             <button
                               type="button"
                               onClick={() => setViewingTaskId(task.id)}
-                              className="px-2.5 py-1.5 text-xs font-medium text-blue-700 dark:text-purple-200 bg-blue-50/60 dark:bg-[#251d3d] border border-blue-200 dark:border-purple-700 hover:bg-blue-600 dark:hover:bg-purple-600 hover:text-white hover:border-blue-600 dark:hover:border-purple-500 rounded-md transition-colors inline-flex items-center gap-1"
+                              className="px-2.5 py-1.5 text-xs font-medium text-blue-700 dark:text-indigo-200 bg-blue-50/60 dark:bg-[#252447] border border-blue-200 dark:border-indigo-500/40 hover:bg-blue-600 dark:hover:bg-[#5b5bd6] hover:text-white hover:border-blue-600 dark:hover:border-[#6e6ade] rounded-md transition-colors inline-flex items-center gap-1"
                               title="ดูรายละเอียดและไฟล์แนบ"
                             >
                               <Eye className="w-3.5 h-3.5" />
@@ -1297,7 +1295,7 @@ export default function HomePage() {
                                 setEditingTask(task);
                                 setIsTaskModalOpen(true);
                               }}
-                              className="p-1.5 text-slate-600 dark:text-purple-200 bg-white dark:bg-[#251d3d] border border-slate-300 dark:border-purple-700 hover:text-blue-600 dark:hover:text-white hover:bg-blue-50 dark:hover:bg-purple-600 hover:border-blue-300 rounded-md transition-colors"
+                              className="p-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:text-blue-600 dark:hover:text-indigo-300 hover:bg-blue-50 dark:hover:bg-[#252447] hover:border-blue-300 rounded-md transition-colors"
                               title="แก้ไขงาน"
                             >
                               <Edit3 className="w-4 h-4" />
@@ -1305,7 +1303,7 @@ export default function HomePage() {
                             <button
                               type="button"
                               onClick={() => handleDeleteTask(task.id)}
-                              className="p-1.5 text-slate-600 dark:text-purple-200 bg-white dark:bg-[#251d3d] border border-slate-300 dark:border-purple-700 hover:text-red-600 dark:hover:text-white hover:bg-red-50 dark:hover:bg-red-600 hover:border-red-300 rounded-md transition-colors"
+                              className="p-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-[#2b1218] hover:border-red-300 rounded-md transition-colors"
                               title="ลบงาน"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -1323,8 +1321,8 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white dark:bg-[#18122b] border-t border-blue-100 dark:border-purple-900/60 py-4 mt-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 dark:text-purple-300/60 gap-2">
+      <footer className="bg-white dark:bg-slate-800/90 border-t border-blue-100 dark:border-slate-700/80 py-4 mt-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 dark:text-slate-500 gap-2">
           <p>TaskFlow — To-Do List & Task Management System</p>
           <p>Developed by Kitthanakorn Chueaprathum</p>
         </div>
