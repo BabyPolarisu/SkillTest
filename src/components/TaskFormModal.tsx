@@ -160,15 +160,15 @@ export default function TaskFormModal({
   const taggableUsers = users.filter((u) => u.id !== currentUserId);
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-xl w-full shadow-xl border border-blue-100 dark:border-slate-700 overflow-hidden max-h-[92vh] flex flex-col">
-        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-blue-50/40 dark:bg-slate-900/40">
-          <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+    <div className="fixed inset-0 z-50 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-[#18122b] rounded-lg max-w-xl w-full shadow-xl border border-blue-100 dark:border-purple-800/80 overflow-hidden max-h-[92vh] flex flex-col">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-purple-900/60 flex items-center justify-between bg-blue-50/40 dark:bg-[#21193a]">
+          <h2 className="text-lg font-semibold text-slate-800 dark:text-white">
             {initialTask ? "แก้ไขรายการงาน" : "เพิ่มรายการงานใหม่"}
           </h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-md"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-md"
           >
             <X className="w-5 h-5" />
           </button>
@@ -179,7 +179,7 @@ export default function TaskFormModal({
           className="p-6 space-y-4 overflow-y-auto flex-1"
         >
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-1">
               หัวข้องาน <span className="text-red-500">*</span>
             </label>
             <input
@@ -188,12 +188,12 @@ export default function TaskFormModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="เช่น สรุปรายงานการประชุมประจำสัปดาห์"
-              className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-purple-800 bg-white dark:bg-[#120d22] text-slate-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
+            <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-1">
               รายละเอียดงาน
             </label>
             <textarea
@@ -201,19 +201,19 @@ export default function TaskFormModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="ระบุรายละเอียดเพิ่มเติมหรือสิ่งที่ต้องเตรียม..."
-              className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-purple-800 bg-white dark:bg-[#120d22] text-slate-800 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
+              <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-1">
                 หมวดหมู่
               </label>
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-purple-800 text-sm bg-white dark:bg-[#120d22] text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
               >
                 <option value="">ไม่ระบุหมวดหมู่</option>
                 {categories.map((cat) => (
@@ -225,13 +225,13 @@ export default function TaskFormModal({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
+              <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-1">
                 สถานะงาน
               </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as TaskStatus)}
-                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-purple-800 text-sm bg-white dark:bg-[#120d22] text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
               >
                 <option value="pending">รอดำเนินการ (Pending)</option>
                 <option value="in_progress">กำลังทำ (In Progress)</option>
@@ -240,13 +240,13 @@ export default function TaskFormModal({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-1">
+              <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-1">
                 ความสำคัญ
               </label>
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-purple-800 text-sm bg-white dark:bg-[#120d22] text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
               >
                 <option value="low">ต่ำ (Low)</option>
                 <option value="medium">ปานกลาง (Medium)</option>
@@ -255,12 +255,12 @@ export default function TaskFormModal({
             </div>
           </div>
 
-          {/* Highlighted Blue Schedule Inputs */}
-          <div className="p-3.5 rounded-md bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/70 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Highlighted Blue/Purple Schedule Inputs */}
+          <div className="p-3.5 rounded-md bg-blue-50/70 dark:bg-[#21193a] border border-blue-200 dark:border-purple-700/80 grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-semibold text-blue-950 dark:text-blue-200 mb-1">
+              <label className="block text-sm font-semibold text-blue-950 dark:text-purple-200 mb-1">
                 <span className="inline-flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <Calendar className="w-4 h-4 text-blue-600 dark:text-purple-400" />
                   วันที่กำหนดส่ง (Due Date) <span className="text-red-500">*</span>
                 </span>
               </label>
@@ -269,14 +269,14 @@ export default function TaskFormModal({
                 required
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-md border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3.5 py-2 rounded-md border border-blue-300 dark:border-purple-700 bg-white dark:bg-[#120d22] text-slate-800 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-blue-950 dark:text-blue-200 mb-1">
+              <label className="block text-sm font-semibold text-blue-950 dark:text-purple-200 mb-1">
                 <span className="inline-flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                  <Clock className="w-4 h-4 text-blue-600 dark:text-purple-400" />
                   เวลากำหนดส่ง (Time Schedule)
                 </span>
               </label>
@@ -284,7 +284,7 @@ export default function TaskFormModal({
                 type="time"
                 value={dueTime}
                 onChange={(e) => setDueTime(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-md border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3.5 py-2 rounded-md border border-blue-300 dark:border-purple-700 bg-white dark:bg-[#120d22] text-slate-800 dark:text-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-purple-500"
               />
             </div>
           </div>
@@ -292,16 +292,16 @@ export default function TaskFormModal({
           {/* Attachments Section */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-200">
+              <label className="block text-sm font-medium text-slate-700 dark:text-purple-100">
                 <span className="inline-flex items-center gap-1.5">
-                  <Paperclip className="w-4 h-4 text-slate-400" />
+                  <Paperclip className="w-4 h-4 text-slate-400 dark:text-purple-400" />
                   แนบรูปภาพหรือไฟล์งาน
                 </span>
               </label>
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-xs font-medium text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-blue-200 dark:border-blue-800"
+                className="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-purple-900/60 text-xs font-medium text-blue-700 dark:text-purple-200 hover:bg-blue-100 dark:hover:bg-purple-800 border border-blue-200 dark:border-purple-700"
               >
                 + เลือกรูปภาพ / ไฟล์แนบ
               </button>
@@ -317,51 +317,51 @@ export default function TaskFormModal({
             />
 
             {fileError && (
-              <p className="text-xs text-red-600 mb-2">{fileError}</p>
+              <p className="text-xs text-red-500 mb-2">{fileError}</p>
             )}
 
             {attachments.length === 0 ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-500 rounded-md p-4 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-900/50"
+                className="border-2 border-dashed border-slate-200 dark:border-purple-800/80 hover:border-blue-300 dark:hover:border-purple-500 rounded-md p-4 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-[#120d22]"
               >
-                <div className="flex items-center justify-center gap-2 text-slate-400 mb-1">
+                <div className="flex items-center justify-center gap-2 text-slate-400 dark:text-purple-400 mb-1">
                   <ImageIcon className="w-5 h-5" />
                   <FileText className="w-5 h-5" />
                 </div>
-                <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                <p className="text-xs text-slate-600 dark:text-purple-200 font-medium">
                   คลิกเพื่ออัปโหลดรูปภาพ หรือไฟล์เอกสารประกอบงาน
                 </p>
-                <p className="text-[11px] text-slate-400 mt-0.5">
+                <p className="text-[11px] text-slate-400 dark:text-purple-300/60 mt-0.5">
                   รองรับรูปภาพ (PNG, JPG) และไฟล์เอกสาร (PDF, DOCX, XLSX, ZIP ฯลฯ)
                 </p>
               </div>
             ) : (
-              <div className="space-y-2 bg-slate-50 dark:bg-slate-900/60 p-3 rounded-md border border-slate-200 dark:border-slate-700">
+              <div className="space-y-2 bg-slate-50 dark:bg-[#120d22] p-3 rounded-md border border-slate-200 dark:border-purple-800">
                 {attachments.map((att) => {
                   const isImage = att.type.startsWith("image/");
                   return (
                     <div
                       key={att.id}
-                      className="flex items-center justify-between gap-3 bg-white dark:bg-slate-800 p-2 rounded-md border border-slate-200/80 dark:border-slate-700"
+                      className="flex items-center justify-between gap-3 bg-white dark:bg-[#21193a] p-2 rounded-md border border-slate-200/80 dark:border-purple-800"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         {isImage ? (
                           <img
                             src={att.url}
                             alt={att.name}
-                            className="w-10 h-10 rounded-xs object-cover border border-slate-200 dark:border-slate-700 shrink-0"
+                            className="w-10 h-10 rounded-xs object-cover border border-slate-200 dark:border-purple-700 shrink-0"
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-xs bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
+                          <div className="w-10 h-10 rounded-xs bg-blue-50 dark:bg-purple-900/60 text-blue-600 dark:text-purple-300 flex items-center justify-center shrink-0">
                             <FileText className="w-5 h-5" />
                           </div>
                         )}
                         <div className="min-w-0">
-                          <p className="text-xs font-medium text-slate-800 dark:text-slate-100 truncate">
+                          <p className="text-xs font-medium text-slate-800 dark:text-white truncate">
                             {att.name}
                           </p>
-                          <p className="text-[11px] text-slate-400">
+                          <p className="text-[11px] text-slate-400 dark:text-purple-300/70">
                             {formatFileSize(att.size)}
                           </p>
                         </div>
@@ -369,7 +369,7 @@ export default function TaskFormModal({
                       <button
                         type="button"
                         onClick={() => removeAttachment(att.id)}
-                        className="p-1.5 text-slate-400 hover:text-red-600 rounded-md"
+                        className="p-1.5 text-slate-400 hover:text-red-500 rounded-md"
                         title="ลบไฟล์แนบ"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -383,9 +383,9 @@ export default function TaskFormModal({
 
           {/* Rectangular User Tag Buttons with Circular Avatar Dot */}
           <div>
-            <label className="block text-sm font-medium text-slate-700 dark:text-slate-200 mb-2">
+            <label className="block text-sm font-medium text-slate-700 dark:text-purple-100 mb-2">
               <span className="inline-flex items-center gap-1.5">
-                <Users className="w-4 h-4 text-slate-400" />
+                <Users className="w-4 h-4 text-slate-400 dark:text-purple-400" />
                 แท็กผู้ที่เกี่ยวข้อง (สามารถเลือกได้หลายคน)
               </span>
             </label>
@@ -399,8 +399,8 @@ export default function TaskFormModal({
                     onClick={() => toggleUserTag(user.id)}
                     className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors flex items-center gap-1.5 ${
                       selected
-                        ? "bg-blue-600 text-white border-blue-600 shadow-2xs"
-                        : "bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                        ? "bg-blue-600 dark:bg-purple-600 text-white border-blue-600 dark:border-purple-500 shadow-2xs"
+                        : "bg-slate-50 dark:bg-[#120d22] text-slate-700 dark:text-purple-200 border-slate-300 dark:border-purple-800 hover:bg-slate-100 dark:hover:bg-[#21193a]"
                     }`}
                   >
                     <span
@@ -418,18 +418,18 @@ export default function TaskFormModal({
             </div>
           </div>
 
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-end gap-2">
+          <div className="pt-3 border-t border-slate-100 dark:border-purple-900/60 flex items-center justify-end gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-md text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+              className="px-4 py-2 rounded-md text-sm font-medium text-slate-600 dark:text-purple-200 border border-slate-200 dark:border-purple-800 bg-white dark:bg-[#120d22] hover:bg-slate-100 dark:hover:bg-[#21193a]"
             >
               ยกเลิก
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
+              className="px-5 py-2 rounded-md text-sm font-medium bg-blue-600 dark:bg-purple-600 text-white hover:bg-blue-700 dark:hover:bg-purple-500 disabled:opacity-50"
             >
               {submitting
                 ? "กำลังบันทึก..."

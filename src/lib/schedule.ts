@@ -36,7 +36,7 @@ export function getScheduleUrgency(dueDate: string): ScheduleUrgencyInfo {
       level: "red",
       label,
       boxClass:
-        "bg-red-50 dark:bg-red-950/45 border-red-300 dark:border-red-800 text-red-900 dark:text-red-200",
+        "bg-red-50 dark:bg-[#2b1218] border-red-300 dark:border-red-500/80 text-red-900 dark:text-red-100",
       badgeClass: "bg-red-600 text-white",
       textClass: "text-red-700 dark:text-red-300",
       iconClass: "text-red-600 dark:text-red-400",
@@ -50,7 +50,7 @@ export function getScheduleUrgency(dueDate: string): ScheduleUrgencyInfo {
       level: "yellow",
       label: `อีก ${diffDays} วัน`,
       boxClass:
-        "bg-amber-50 dark:bg-amber-950/45 border-amber-300 dark:border-amber-700 text-amber-900 dark:text-amber-200",
+        "bg-amber-50 dark:bg-[#2b2110] border-amber-300 dark:border-amber-500/80 text-amber-900 dark:text-amber-100",
       badgeClass: "bg-amber-500 text-white",
       textClass: "text-amber-700 dark:text-amber-300",
       iconClass: "text-amber-600 dark:text-amber-400",
@@ -63,7 +63,7 @@ export function getScheduleUrgency(dueDate: string): ScheduleUrgencyInfo {
     level: "green",
     label: `อีก ${diffDays} วัน`,
     boxClass:
-      "bg-emerald-50 dark:bg-emerald-950/45 border-emerald-300 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200",
+      "bg-emerald-50 dark:bg-[#0f2920] border-emerald-300 dark:border-emerald-500/80 text-emerald-900 dark:text-emerald-100",
     badgeClass: "bg-emerald-600 text-white",
     textClass: "text-emerald-700 dark:text-emerald-300",
     iconClass: "text-emerald-600 dark:text-emerald-400",
