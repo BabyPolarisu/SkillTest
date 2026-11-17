@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Category, Task, TaskStatus, User } from "@/types/todo";
+import { getScheduleUrgency } from "@/lib/schedule";
 import {
   X,
   Calendar,
@@ -71,14 +72,13 @@ export default function TaskDetailModal({
     },
   }[task.priority];
 
-  const todayStr = new Date().toISOString().split("T")[0];
-  const isOverdue = task.status !== "completed" && task.dueDate < todayStr;
+  const urgency = getScheduleUrgency(task.dueDate);
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-2xl w-full shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-2xl w-full shadow-xl border border-blue-100 dark:border-slate-700 overflow-hidden max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-slate-50/60 dark:bg-slate-900/50">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between gap-4 bg-blue-50/40 dark:bg-slate-900/50">
           <div className="flex flex-wrap items-center gap-2">
             {category && (
               <span
@@ -120,7 +120,7 @@ export default function TaskDetailModal({
                 task.status === "completed"
                   ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
                   : task.status === "in_progress"
-                  ? "bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-300 dark:border-sky-800"
+                  ? "bg-blue-50 dark:bg-sky-950/60 text-blue-700 dark:text-sky-300 border-blue-300 dark:border-sky-800"
                   : "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800"
               }`}
             >
@@ -130,55 +130,43 @@ export default function TaskDetailModal({
             </select>
           </div>
 
-          {/* Prominent Schedule Box */}
+          {/* 3-Color Prominent Schedule Box */}
           <div
-            className={`p-4 rounded-md border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-              isOverdue
-                ? "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800"
-                : "bg-indigo-50/70 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-800/80"
-            }`}
+            className={`p-4 rounded-md border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${urgency.boxClass}`}
           >
             <div className="flex items-center gap-3">
               <div
-                className={`w-10 h-10 rounded-md flex items-center justify-center shrink-0 ${
-                  isOverdue
-                    ? "bg-red-600 text-white"
-                    : "bg-indigo-600 text-white"
-                }`}
+                className={`w-10 h-10 rounded-md flex items-center justify-center shrink-0 ${urgency.badgeClass}`}
               >
                 <Calendar className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                <p className="text-xs opacity-80 font-medium">
                   วันที่กำหนดส่งงาน (Due Date)
                 </p>
-                <p
-                  className={`text-base font-bold ${
-                    isOverdue
-                      ? "text-red-700 dark:text-red-300"
-                      : "text-slate-800 dark:text-slate-100"
-                  }`}
-                >
-                  {task.dueDate}
-                  {isOverdue && (
-                    <span className="ml-2 px-2 py-0.5 bg-red-600 text-white rounded-xs text-xs font-semibold">
-                      เลยกำหนด
-                    </span>
-                  )}
-                </p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className={`text-base font-bold ${urgency.textClass}`}>
+                    {task.dueDate}
+                  </span>
+                  <span
+                    className={`px-2 py-0.5 rounded-xs text-xs font-bold ${urgency.badgeClass}`}
+                  >
+                    {urgency.label}
+                  </span>
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 sm:border-l sm:pl-6 border-indigo-200/80 dark:border-indigo-800">
-              <div className="w-10 h-10 rounded-md bg-white dark:bg-slate-800 border border-indigo-200 dark:border-indigo-700 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
-                <Clock className="w-5 h-5" />
+            <div className="flex items-center gap-3 sm:border-l sm:pl-6 border-current/20">
+              <div className="w-10 h-10 rounded-md bg-white/80 dark:bg-slate-800 border border-current/20 flex items-center justify-center shrink-0">
+                <Clock className={`w-5 h-5 ${urgency.iconClass}`} />
               </div>
               <div>
-                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                <p className="text-xs opacity-80 font-medium">
                   เวลากำหนดส่ง (Time Schedule)
                 </p>
-                <p className="text-base font-bold text-indigo-900 dark:text-indigo-200">
-                  {task.dueTime} น.
+                <p className={`text-base font-bold ${urgency.textClass}`}>
+                  เวลา {task.dueTime} น.
                 </p>
               </div>
             </div>
@@ -187,7 +175,7 @@ export default function TaskDetailModal({
           {/* Owner & Tagged Users Info */}
           <div className="bg-slate-50 dark:bg-slate-900/60 p-4 rounded-md border border-slate-200 dark:border-slate-700 space-y-3 text-xs sm:text-sm">
             <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
-              <UserIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+              <UserIcon className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0" />
               <span>ผู้สร้างงาน:</span>
               <span className="font-semibold text-slate-800 dark:text-slate-100">
                 {owner?.name || "ไม่ระบุ"}
@@ -195,7 +183,7 @@ export default function TaskDetailModal({
             </div>
 
             <div className="flex items-start gap-2 text-slate-600 dark:text-slate-300 pt-2 border-t border-slate-200/70 dark:border-slate-700">
-              <Users className="w-4 h-4 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
               <div className="flex flex-wrap items-center gap-1.5">
                 <span>ผู้ที่เกี่ยวข้อง:</span>
                 {task.taggedUserIds.length === 0 ? (
@@ -236,7 +224,7 @@ export default function TaskDetailModal({
           {imageAttachments.length > 0 && (
             <div>
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <ImageIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <ImageIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 รูปภาพประกอบงาน ({imageAttachments.length})
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -282,7 +270,7 @@ export default function TaskDetailModal({
           {fileAttachments.length > 0 && (
             <div>
               <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-                <Paperclip className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <Paperclip className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 ไฟล์เอกสารแนบ ({fileAttachments.length})
               </h3>
               <div className="space-y-2">
@@ -292,7 +280,7 @@ export default function TaskDetailModal({
                     className="flex items-center justify-between gap-3 p-3 rounded-md bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-9 h-9 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                      <div className="w-9 h-9 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                         <FileText className="w-5 h-5" />
                       </div>
                       <div className="min-w-0">
@@ -309,7 +297,7 @@ export default function TaskDetailModal({
                       download={file.name}
                       className="px-3 py-1.5 rounded-md bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs font-medium text-slate-700 dark:text-slate-200 inline-flex items-center gap-1.5 shrink-0"
                     >
-                      <Download className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                      <Download className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                       ดาวน์โหลด
                     </a>
                   </div>
@@ -347,7 +335,7 @@ export default function TaskDetailModal({
                 onClose();
                 onEdit(task);
               }}
-              className="px-4 py-2 rounded-md text-xs sm:text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 inline-flex items-center gap-1.5"
+              className="px-4 py-2 rounded-md text-xs sm:text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 inline-flex items-center gap-1.5"
             >
               <Edit3 className="w-4 h-4" />
               แก้ไขข้อมูล / แนบไฟล์เพิ่ม

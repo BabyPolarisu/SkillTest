@@ -8,6 +8,7 @@ import React, {
   useRef,
 } from "react";
 import { Category, Task, TaskStatus, User } from "@/types/todo";
+import { getScheduleUrgency } from "@/lib/schedule";
 import DashboardStats from "@/components/DashboardStats";
 import TaskFormModal from "@/components/TaskFormModal";
 import TaskDetailModal from "@/components/TaskDetailModal";
@@ -42,7 +43,7 @@ export default function HomePage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Theme state (Soft Light vs Dark)
+  // Theme state (White-Blue Light Theme vs Dark Theme)
   const [isDark, setIsDark] = useState(false);
 
   // UI Modals & Tabs
@@ -403,25 +404,11 @@ export default function HomePage() {
     [personFilter, getUserById]
   );
 
-  const todayStr = new Date().toISOString().split("T")[0];
-
-  const getRelativeDayLabel = (dueDate: string) => {
-    const today = new Date(todayStr);
-    const target = new Date(dueDate);
-    const diffDays = Math.round(
-      (target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    if (diffDays < 0) return `เลยกำหนด ${Math.abs(diffDays)} วัน`;
-    if (diffDays === 0) return "วันนี้";
-    if (diffDays === 1) return "พรุ่งนี้";
-    return `อีก ${diffDays} วัน`;
-  };
-
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#eef2f6] dark:bg-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-[#edf4fc] dark:bg-slate-900">
         <div className="text-center space-y-2">
-          <div className="w-8 h-8 border-3 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto" />
+          <div className="w-8 h-8 border-3 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-sm text-slate-500 dark:text-slate-400">
             กำลังโหลดข้อมูลระบบ...
           </p>
@@ -431,16 +418,16 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#eef2f6] dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col transition-colors">
-      {/* Top Navbar */}
-      <header className="bg-white/90 dark:bg-slate-800/95 backdrop-blur-xs border-b border-slate-200/80 dark:border-slate-700/80 sticky top-0 z-30">
+    <div className="min-h-screen bg-[#edf4fc] dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col transition-colors">
+      {/* Top Navbar (White & Blue Theme) */}
+      <header className="bg-white dark:bg-slate-800/95 border-b border-blue-100 dark:border-slate-700/80 sticky top-0 z-30 shadow-2xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-md bg-indigo-600 flex items-center justify-center text-white shadow-xs">
+            <div className="w-9 h-9 rounded-md bg-blue-600 flex items-center justify-center text-white shadow-xs">
               <CheckSquare className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-base sm:text-lg font-bold text-slate-800 dark:text-slate-100 leading-tight">
+              <h1 className="text-base sm:text-lg font-bold text-blue-950 dark:text-slate-100 leading-tight">
                 TaskFlow
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
@@ -455,15 +442,15 @@ export default function HomePage() {
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+              className="p-2 rounded-md border border-blue-200 dark:border-slate-700 bg-blue-50/50 dark:bg-slate-900 hover:bg-blue-100/70 dark:hover:bg-slate-700 text-blue-700 dark:text-slate-300 transition-colors"
               title={
-                isDark ? "สลับเป็นโหมดสีอ่อนสบายตา" : "สลับเป็นโหมดมืด (Dark Mode)"
+                isDark ? "สลับเป็นธีมขาว-น้ำเงิน" : "สลับเป็นโหมดมืด (Dark Mode)"
               }
             >
               {isDark ? (
                 <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400" />
               ) : (
-                <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />
+                <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-blue-700" />
               )}
             </button>
 
@@ -472,7 +459,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => setIsNotifOpen((prev) => !prev)}
-                className="relative p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors"
+                className="relative p-2 rounded-md border border-blue-200 dark:border-slate-700 bg-blue-50/50 dark:bg-slate-900 hover:bg-blue-100/70 dark:hover:bg-slate-700 text-blue-700 dark:text-slate-300 transition-colors"
                 title="การแจ้งเตือนงานที่ถูกแท็ก"
               >
                 <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -484,8 +471,8 @@ export default function HomePage() {
               </button>
 
               {isNotifOpen && (
-                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 z-50 overflow-hidden">
-                  <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-slate-50/70 dark:bg-slate-900/50">
+                <div className="absolute right-0 mt-2 w-80 sm:w-96 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-blue-100 dark:border-slate-700 z-50 overflow-hidden">
+                  <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-blue-50/50 dark:bg-slate-900/50">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
                         งานที่คุณถูกแท็ก
@@ -500,7 +487,7 @@ export default function HomePage() {
                       <button
                         type="button"
                         onClick={markAllNotifsAsRead}
-                        className="px-2 py-1 rounded-md text-xs text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 font-medium inline-flex items-center gap-1"
+                        className="px-2 py-1 rounded-md text-xs text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/60 font-medium inline-flex items-center gap-1"
                       >
                         <CheckCheck className="w-3.5 h-3.5" />
                         อ่านทั้งหมด
@@ -519,14 +506,15 @@ export default function HomePage() {
                           (u) => u.id === t.id
                         );
                         const owner = getUserById(t.ownerId);
+                        const urgency = getScheduleUrgency(t.dueDate);
                         return (
                           <button
                             key={t.id}
                             type="button"
                             onClick={() => jumpToTask(t)}
-                            className={`w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/60 transition-colors flex items-start gap-3 ${
+                            className={`w-full text-left px-4 py-3 hover:bg-blue-50/50 dark:hover:bg-slate-700/60 transition-colors flex items-start gap-3 ${
                               isUnread
-                                ? "bg-indigo-50/40 dark:bg-indigo-950/30"
+                                ? "bg-blue-50/40 dark:bg-blue-950/30"
                                 : ""
                             }`}
                           >
@@ -549,10 +537,12 @@ export default function HomePage() {
                                 </span>
                               </p>
                               <div className="flex items-center justify-between mt-1.5">
-                                <span className="px-2 py-0.5 rounded-xs bg-slate-100 dark:bg-slate-700 text-[11px] font-semibold text-slate-700 dark:text-slate-200">
-                                  {t.dueDate} • เวลา {t.dueTime} น.
+                                <span
+                                  className={`px-2 py-0.5 rounded-xs text-[11px] font-semibold ${urgency.badgeClass}`}
+                                >
+                                  {t.dueDate} ({urgency.label}) • {t.dueTime} น.
                                 </span>
-                                <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold">
+                                <span className="text-[11px] text-blue-600 dark:text-blue-400 font-semibold">
                                   เปิดดูงาน →
                                 </span>
                               </div>
@@ -566,11 +556,11 @@ export default function HomePage() {
               )}
             </div>
 
-            <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-900 rounded-md px-2.5 py-1.5 border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center gap-2 bg-blue-50/70 dark:bg-slate-900 rounded-md px-2.5 py-1.5 border border-blue-200 dark:border-slate-700">
               <span
                 className="w-2.5 h-2.5 rounded-full shrink-0"
                 style={{
-                  backgroundColor: currentUser?.avatarColor || "#4f46e5",
+                  backgroundColor: currentUser?.avatarColor || "#2563eb",
                 }}
               />
               <span className="text-xs text-slate-500 dark:text-slate-400 hidden md:inline">
@@ -586,7 +576,7 @@ export default function HomePage() {
                     resetFilters();
                   }
                 }}
-                className="bg-transparent text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-100 focus:outline-none cursor-pointer"
+                className="bg-transparent text-xs sm:text-sm font-medium text-blue-950 dark:text-slate-100 focus:outline-none cursor-pointer"
               >
                 {users.map((u) => (
                   <option
@@ -603,9 +593,9 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => setIsAuthModalOpen(true)}
-              className="px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-700 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 inline-flex items-center gap-1.5"
+              className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-slate-700 bg-blue-50/60 dark:bg-slate-900 hover:bg-blue-100/80 dark:hover:bg-slate-700 text-xs sm:text-sm font-medium text-blue-800 dark:text-slate-200 inline-flex items-center gap-1.5"
             >
-              <UserPlus className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <UserPlus className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               <span className="hidden sm:inline">เพิ่ม/สลับบัญชี</span>
             </button>
           </div>
@@ -650,9 +640,9 @@ export default function HomePage() {
         )}
 
         {/* Action Header Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/90 dark:bg-slate-800/90 p-4 sm:p-5 rounded-lg border border-slate-200/80 dark:border-slate-700/80 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-slate-800/90 p-4 sm:p-5 rounded-lg border border-blue-100 dark:border-slate-700/80 shadow-xs">
           <div>
-            <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">
+            <h2 className="text-lg font-bold text-blue-950 dark:text-slate-100">
               สวัสดี, {currentUser?.name}
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
@@ -666,7 +656,7 @@ export default function HomePage() {
               onClick={() => setShowDashboard((prev) => !prev)}
               className={`px-3.5 py-2 rounded-md text-xs sm:text-sm font-medium border transition-colors inline-flex items-center gap-1.5 ${
                 showDashboard
-                  ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-200 dark:border-indigo-800"
+                  ? "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800"
                   : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700"
               }`}
             >
@@ -680,7 +670,7 @@ export default function HomePage() {
                 setEditingTask(null);
                 setIsTaskModalOpen(true);
               }}
-              className="px-4 py-2 rounded-md text-xs sm:text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 shadow-xs inline-flex items-center gap-1.5"
+              className="px-4 py-2 rounded-md text-xs sm:text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 shadow-xs inline-flex items-center gap-1.5"
             >
               <Plus className="w-4 h-4" />
               เพิ่มงานใหม่
@@ -700,11 +690,11 @@ export default function HomePage() {
         )}
 
         {/* Smart Search & Filter Controls */}
-        <div className="bg-white/90 dark:bg-slate-800/90 rounded-lg p-4 sm:p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-xs space-y-4">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-4 sm:p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs space-y-4">
           <div className="flex flex-col md:flex-row gap-3">
             {/* Smart Search Input with Dropdown for People & Tasks */}
             <div className="relative flex-1" ref={searchContainerRef}>
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              <Search className="w-4 h-4 text-blue-500 dark:text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
@@ -714,7 +704,7 @@ export default function HomePage() {
                   setIsSearchDropdownOpen(true);
                 }}
                 placeholder="ค้นหาชื่อคน (ผู้สร้าง/ผู้ถูกแท็ก) หรือพิมพ์ค้นหาชื่องาน..."
-                className="w-full pl-9 pr-16 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-slate-50/70 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full pl-9 pr-16 py-2 rounded-md border border-blue-200 dark:border-slate-600 bg-blue-50/30 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
                 {searchQuery && (
@@ -739,11 +729,11 @@ export default function HomePage() {
 
               {/* Autocomplete Dropdown */}
               {isSearchDropdownOpen && (
-                <div className="absolute left-0 right-0 mt-1.5 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-slate-200 dark:border-slate-700 z-40 max-h-96 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700">
+                <div className="absolute left-0 right-0 mt-1.5 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-blue-100 dark:border-slate-700 z-40 max-h-96 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-700">
                   {/* People Section */}
                   <div className="p-2.5">
                     <p className="px-2 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                      <Users className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                      <Users className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                       ค้นหาตามรายชื่อผู้ใช้งาน ({searchSuggestions.matchedUsers.length})
                     </p>
                     {searchSuggestions.matchedUsers.length === 0 ? (
@@ -770,8 +760,8 @@ export default function HomePage() {
                               }}
                               className={`flex items-center justify-between px-3 py-2 rounded-md border text-left transition-colors ${
                                 isSelected
-                                  ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border-indigo-300 dark:border-indigo-700"
-                                  : "bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/70 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700"
+                                  ? "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700"
+                                  : "bg-white dark:bg-slate-800 hover:bg-blue-50/50 dark:hover:bg-slate-700/70 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700"
                               }`}
                             >
                               <div className="flex items-center gap-2 min-w-0">
@@ -788,7 +778,7 @@ export default function HomePage() {
                                   </p>
                                 </div>
                               </div>
-                              <span className="text-[11px] px-2 py-0.5 rounded-xs bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium shrink-0">
+                              <span className="text-[11px] px-2 py-0.5 rounded-xs bg-blue-50 dark:bg-slate-700 text-blue-700 dark:text-slate-300 font-medium shrink-0">
                                 {userTaskCount} งาน
                               </span>
                             </button>
@@ -801,7 +791,7 @@ export default function HomePage() {
                   {/* Tasks Section */}
                   <div className="p-2.5">
                     <p className="px-2 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                      <CheckSquare className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                      <CheckSquare className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
                       รายการงานที่ตรงกับคำค้นหา ({searchSuggestions.matchedTasks.length})
                     </p>
                     {searchSuggestions.matchedTasks.length === 0 ? (
@@ -818,7 +808,7 @@ export default function HomePage() {
                               key={t.id}
                               type="button"
                               onClick={() => jumpToTask(t)}
-                              className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-md border border-transparent hover:border-slate-200 dark:hover:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/60 text-left transition-colors"
+                              className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-md border border-transparent hover:border-blue-200 dark:hover:border-slate-700 hover:bg-blue-50/40 dark:hover:bg-slate-700/60 text-left transition-colors"
                             >
                               <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2">
@@ -836,7 +826,7 @@ export default function HomePage() {
                                   ผู้สร้าง: {owner?.name} • กำหนดส่ง {t.dueDate} ({t.dueTime} น.)
                                 </p>
                               </div>
-                              <span className="px-2.5 py-1 rounded-xs bg-indigo-50 dark:bg-indigo-950/60 text-[11px] text-indigo-600 dark:text-indigo-300 font-semibold shrink-0">
+                              <span className="px-2.5 py-1 rounded-xs bg-blue-50 dark:bg-blue-950/60 text-[11px] text-blue-600 dark:text-blue-300 font-semibold shrink-0">
                                 เปิดดู →
                               </span>
                             </button>
@@ -850,14 +840,14 @@ export default function HomePage() {
             </div>
 
             {/* Scope Tabs (Rectangular Buttons + Circular Notification Dot) */}
-            <div className="flex rounded-md bg-slate-100 dark:bg-slate-900 p-1 shrink-0 border border-slate-200 dark:border-slate-700">
+            <div className="flex rounded-md bg-blue-50/70 dark:bg-slate-900 p-1 shrink-0 border border-blue-200/80 dark:border-slate-700">
               <button
                 type="button"
                 onClick={() => setScopeFilter("all")}
                 className={`px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
                   scopeFilter === "all"
-                    ? "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-2xs"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                    ? "bg-blue-600 text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-slate-200"
                 }`}
               >
                 ทั้งหมด ({tasks.length})
@@ -867,8 +857,8 @@ export default function HomePage() {
                 onClick={() => setScopeFilter("mine")}
                 className={`px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
                   scopeFilter === "mine"
-                    ? "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-2xs"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                    ? "bg-blue-600 text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-slate-200"
                 }`}
               >
                 งานของฉัน (
@@ -882,8 +872,8 @@ export default function HomePage() {
                 }}
                 className={`relative px-3 py-1.5 rounded-xs text-xs font-medium transition-colors inline-flex items-center gap-1.5 ${
                   scopeFilter === "tagged"
-                    ? "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-2xs"
-                    : "text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                    ? "bg-blue-600 text-white shadow-2xs"
+                    : "text-slate-600 dark:text-slate-400 hover:text-blue-700 dark:hover:text-slate-200"
                 }`}
               >
                 <span>
@@ -898,7 +888,7 @@ export default function HomePage() {
                 {/* Circular Notification Dot */}
                 {unreadTaggedTasks.length > 0 && (
                   <span
-                    className="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"
+                    className="w-2.5 h-2.5 rounded-full bg-red-500 inline-block ring-1 ring-white"
                     title="มีงานที่ถูกแท็กใหม่"
                   />
                 )}
@@ -913,8 +903,8 @@ export default function HomePage() {
               onClick={() => setCategoryFilter("all")}
               className={`px-3.5 py-2 rounded-md text-xs font-semibold border transition-colors ${
                 categoryFilter === "all"
-                  ? "bg-slate-800 dark:bg-indigo-600 text-white border-slate-800 dark:border-indigo-600 shadow-2xs"
-                  : "bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                  ? "bg-blue-600 text-white border-blue-600 shadow-2xs"
+                  : "bg-blue-50/50 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border-blue-200 dark:border-slate-700 hover:bg-blue-100/60 dark:hover:bg-slate-700"
               }`}
             >
               ทุกหมวดหมู่ ({tasks.length})
@@ -930,7 +920,7 @@ export default function HomePage() {
                   className={`px-3.5 py-2 rounded-md text-xs font-semibold border transition-colors inline-flex items-center gap-2 ${
                     active
                       ? "text-white border-transparent shadow-2xs"
-                      : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700"
+                      : "bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-blue-200/80 dark:border-slate-700 hover:bg-blue-50/50 dark:hover:bg-slate-700"
                   }`}
                   style={active ? { backgroundColor: cat.color } : undefined}
                 >
@@ -945,7 +935,7 @@ export default function HomePage() {
                     className={`px-1.5 py-0.2 rounded-xs text-[11px] ${
                       active
                         ? "bg-white/20 text-white"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                        : "bg-blue-50 dark:bg-slate-800 text-blue-700 dark:text-slate-400"
                     }`}
                   >
                     {count}
@@ -958,14 +948,14 @@ export default function HomePage() {
           {/* Secondary Filter Dropdowns (Status & Person) */}
           <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-700">
             <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500 dark:text-slate-400">
-              <Filter className="w-3.5 h-3.5" />
+              <Filter className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
               ตัวกรองเพิ่มเติม:
             </div>
 
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-1.5 rounded-md border border-slate-300 dark:border-slate-700 text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-slate-700 text-xs sm:text-sm bg-blue-50/40 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">ทุกสถานะ</option>
               <option value="pending">รอดำเนินการ (Pending)</option>
@@ -976,7 +966,7 @@ export default function HomePage() {
             <select
               value={personFilter}
               onChange={(e) => setPersonFilter(e.target.value)}
-              className="px-3 py-1.5 rounded-md border border-slate-300 dark:border-slate-700 text-xs sm:text-sm bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-slate-700 text-xs sm:text-sm bg-blue-50/40 dark:bg-slate-900 text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">บุคคลที่เกี่ยวข้องทั้งหมด</option>
               {users.map((u) => (
@@ -987,7 +977,7 @@ export default function HomePage() {
             </select>
 
             {selectedPersonObj && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                 <span
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: selectedPersonObj.avatarColor }}
@@ -996,7 +986,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setPersonFilter("all")}
-                  className="hover:text-indigo-900 dark:hover:text-white ml-1"
+                  className="hover:text-blue-900 dark:hover:text-white ml-1"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -1011,7 +1001,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="px-3 py-1.5 rounded-md border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/60 text-xs text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 font-medium inline-flex items-center gap-1 ml-auto"
+                className="px-3 py-1.5 rounded-md border border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/60 text-xs text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60 font-medium inline-flex items-center gap-1 ml-auto"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 ล้างตัวกรองทั้งหมด
@@ -1022,24 +1012,38 @@ export default function HomePage() {
 
         {/* Task List */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between px-1">
-            <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
+            <h3 className="text-sm font-semibold text-blue-950 dark:text-slate-200">
               รายการงาน ({filteredTasks.length} รายการ)
             </h3>
-            <span className="text-xs text-slate-500 dark:text-slate-400">
-              คลิกที่รายการงานเพื่อดูรายละเอียด รูปภาพ และไฟล์แนบ
-            </span>
+
+            {/* 3-Color Due Date Legend */}
+            <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-slate-600 dark:text-slate-400">
+              <span>สีวันครบกำหนด:</span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                สีแดง (วันนี้/พรุ่งนี้)
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                สีเหลือง (2-4 วัน)
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                สีเขียว (5+ วัน)
+              </span>
+            </div>
           </div>
 
           {filteredTasks.length === 0 ? (
-            <div className="bg-white/90 dark:bg-slate-800/90 rounded-lg border border-slate-200/80 dark:border-slate-700 p-12 text-center space-y-3">
+            <div className="bg-white dark:bg-slate-800/90 rounded-lg border border-blue-100 dark:border-slate-700 p-12 text-center space-y-3">
               <p className="text-slate-500 dark:text-slate-400 text-sm">
                 ไม่พบรายการงานที่ตรงกับเงื่อนไขการค้นหา
               </p>
               <button
                 type="button"
                 onClick={resetFilters}
-                className="px-4 py-2 rounded-md text-xs font-medium bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-100 inline-flex items-center gap-1.5"
+                className="px-4 py-2 rounded-md text-xs font-medium bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-300 border border-blue-200 dark:border-blue-800 hover:bg-blue-100 inline-flex items-center gap-1.5"
               >
                 <RotateCcw className="w-4 h-4" />
                 แสดงงานทั้งหมด
@@ -1050,9 +1054,7 @@ export default function HomePage() {
               {filteredTasks.map((task) => {
                 const cat = getCategoryById(task.categoryId);
                 const owner = getUserById(task.ownerId);
-                const isOverdue =
-                  task.status !== "completed" && task.dueDate < todayStr;
-                const relativeDay = getRelativeDayLabel(task.dueDate);
+                const urgency = getScheduleUrgency(task.dueDate);
                 const isUnreadTagged = unreadTaggedTasks.some(
                   (u) => u.id === task.id
                 );
@@ -1085,16 +1087,14 @@ export default function HomePage() {
                       if (isUnreadTagged) markTaskAsRead(task.id);
                       setViewingTaskId(task.id);
                     }}
-                    className={`bg-white/95 dark:bg-slate-800/95 rounded-lg p-4 sm:p-5 border transition-all shadow-xs hover:shadow-md cursor-pointer ${
+                    className={`bg-white dark:bg-slate-800/95 rounded-lg p-4 sm:p-5 border transition-all shadow-xs hover:shadow-md cursor-pointer ${
                       isHighlighted
-                        ? "border-indigo-500 ring-2 ring-indigo-200 dark:ring-indigo-800"
+                        ? "border-blue-500 ring-2 ring-blue-200 dark:ring-blue-800"
                         : task.status === "completed"
                         ? "border-slate-200/70 dark:border-slate-700/60 bg-slate-50/70 dark:bg-slate-800/50"
                         : isUnreadTagged
                         ? "border-red-300 dark:border-red-700 ring-1 ring-red-100 dark:ring-red-900/40"
-                        : isOverdue
-                        ? "border-red-200 dark:border-red-800/70"
-                        : "border-slate-200/80 dark:border-slate-700/80"
+                        : "border-blue-100 dark:border-slate-700/80 hover:border-blue-300"
                     }`}
                   >
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -1124,14 +1124,14 @@ export default function HomePage() {
                           </span>
 
                           {task.ownerId !== currentUser?.id && (
-                            <span className="px-2.5 py-1 rounded-xs text-xs font-medium bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                            <span className="px-2.5 py-1 rounded-xs text-xs font-medium bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                               แท็กโดย {owner?.name}
                             </span>
                           )}
 
                           {attachments.length > 0 && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xs text-xs font-medium bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600">
-                              <Paperclip className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
+                              <Paperclip className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                               {attachments.length} ไฟล์แนบ
                             </span>
                           )}
@@ -1182,7 +1182,7 @@ export default function HomePage() {
                                 return (
                                   <span
                                     key={uid}
-                                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-slate-100 dark:bg-slate-700/80 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium"
+                                    className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-xs bg-blue-50/60 dark:bg-slate-700/80 border border-blue-200/70 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-medium"
                                   >
                                     <span
                                       className="w-2 h-2 rounded-full"
@@ -1197,39 +1197,45 @@ export default function HomePage() {
                         </div>
                       </div>
 
-                      {/* Prominent Schedule Box + Right Action Buttons */}
+                      {/* 3-Color Prominent Schedule Box + Right Action Buttons */}
                       <div
                         onClick={(e) => e.stopPropagation()}
                         className="flex flex-wrap sm:flex-nowrap items-center justify-between lg:justify-end gap-3 shrink-0 border-t lg:border-t-0 pt-3 lg:pt-0 border-slate-100 dark:border-slate-700"
                       >
-                        {/* Prominent Square Schedule Display */}
+                        {/* 3-Color Square Schedule Display */}
                         <div
                           className={`px-3.5 py-2 rounded-md border flex items-center gap-3 ${
                             task.status === "completed"
                               ? "bg-slate-100 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-700"
-                              : isOverdue
-                              ? "bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 border-red-300 dark:border-red-800"
-                              : "bg-indigo-50/70 dark:bg-indigo-950/40 text-slate-800 dark:text-slate-100 border-indigo-200 dark:border-indigo-800/80"
+                              : urgency.boxClass
                           }`}
                         >
                           <div>
                             <div className="flex items-center gap-1.5 text-xs font-semibold">
-                              <Calendar className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                              <Calendar
+                                className={`w-3.5 h-3.5 ${
+                                  task.status === "completed"
+                                    ? "text-slate-400"
+                                    : urgency.iconClass
+                                }`}
+                              />
                               <span>กำหนดส่ง: {task.dueDate}</span>
                               {task.status !== "completed" && (
                                 <span
-                                  className={`px-1.5 py-0.2 rounded-xs text-[10px] font-bold ${
-                                    isOverdue
-                                      ? "bg-red-600 text-white"
-                                      : "bg-indigo-600 text-white"
-                                  }`}
+                                  className={`px-1.5 py-0.5 rounded-xs text-[10px] font-bold ${urgency.badgeClass}`}
                                 >
-                                  {relativeDay}
+                                  {urgency.label}
                                 </span>
                               )}
                             </div>
-                            <div className="flex items-center gap-1.5 text-sm font-bold mt-0.5 text-indigo-900 dark:text-indigo-200">
-                              <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                            <div
+                              className={`flex items-center gap-1.5 text-sm font-bold mt-0.5 ${
+                                task.status === "completed"
+                                  ? "text-slate-500"
+                                  : urgency.textClass
+                              }`}
+                            >
+                              <Clock className="w-4 h-4" />
                               <span>เวลา {task.dueTime} น.</span>
                             </div>
                           </div>
@@ -1249,7 +1255,7 @@ export default function HomePage() {
                               task.status === "completed"
                                 ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
                                 : task.status === "in_progress"
-                                ? "bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border-sky-300 dark:border-sky-800"
+                                ? "bg-blue-50 dark:bg-sky-950/60 text-blue-700 dark:text-sky-300 border-blue-300 dark:border-sky-800"
                                 : "bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border-amber-300 dark:border-amber-800"
                             }`}
                           >
@@ -1268,7 +1274,7 @@ export default function HomePage() {
                             <button
                               type="button"
                               onClick={() => setViewingTaskId(task.id)}
-                              className="px-2.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 hover:text-indigo-700 dark:hover:text-indigo-300 hover:border-indigo-300 rounded-md transition-colors inline-flex items-center gap-1"
+                              className="px-2.5 py-1.5 text-xs font-medium text-blue-700 dark:text-slate-200 bg-blue-50/60 dark:bg-slate-900 border border-blue-200 dark:border-slate-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 rounded-md transition-colors inline-flex items-center gap-1"
                               title="ดูรายละเอียดและไฟล์แนบ"
                             >
                               <Eye className="w-3.5 h-3.5" />
@@ -1280,7 +1286,7 @@ export default function HomePage() {
                                 setEditingTask(task);
                                 setIsTaskModalOpen(true);
                               }}
-                              className="p-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 hover:border-indigo-300 rounded-md transition-colors"
+                              className="p-1.5 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/60 hover:border-blue-300 rounded-md transition-colors"
                               title="แก้ไขงาน"
                             >
                               <Edit3 className="w-4 h-4" />
@@ -1306,7 +1312,7 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white/90 dark:bg-slate-800/90 border-t border-slate-200/80 dark:border-slate-700/80 py-4 mt-10">
+      <footer className="bg-white dark:bg-slate-800/90 border-t border-blue-100 dark:border-slate-700/80 py-4 mt-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 dark:text-slate-500 gap-2">
           <p>TaskFlow — To-Do List & Task Management System</p>
           <p>Developed by Kitthanakorn Chueaprathum</p>

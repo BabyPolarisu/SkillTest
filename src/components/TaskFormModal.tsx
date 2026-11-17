@@ -161,8 +161,8 @@ export default function TaskFormModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-xl w-full shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden max-h-[92vh] flex flex-col">
-        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-xl w-full shadow-xl border border-blue-100 dark:border-slate-700 overflow-hidden max-h-[92vh] flex flex-col">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-blue-50/40 dark:bg-slate-900/40">
           <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
             {initialTask ? "แก้ไขรายการงาน" : "เพิ่มรายการงานใหม่"}
           </h2>
@@ -188,7 +188,7 @@ export default function TaskFormModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="เช่น สรุปรายงานการประชุมประจำสัปดาห์"
-              className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -201,7 +201,7 @@ export default function TaskFormModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="ระบุรายละเอียดเพิ่มเติมหรือสิ่งที่ต้องเตรียม..."
-              className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -213,7 +213,7 @@ export default function TaskFormModal({
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="">ไม่ระบุหมวดหมู่</option>
                 {categories.map((cat) => (
@@ -231,7 +231,7 @@ export default function TaskFormModal({
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as TaskStatus)}
-                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="pending">รอดำเนินการ (Pending)</option>
                 <option value="in_progress">กำลังทำ (In Progress)</option>
@@ -246,7 +246,7 @@ export default function TaskFormModal({
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 dark:border-slate-600 text-sm bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="low">ต่ำ (Low)</option>
                 <option value="medium">ปานกลาง (Medium)</option>
@@ -255,12 +255,12 @@ export default function TaskFormModal({
             </div>
           </div>
 
-          {/* Highlighted Schedule Inputs */}
-          <div className="p-3.5 rounded-md bg-indigo-50/60 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/70 grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Highlighted Blue Schedule Inputs */}
+          <div className="p-3.5 rounded-md bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/70 grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-semibold text-indigo-950 dark:text-indigo-200 mb-1">
+              <label className="block text-sm font-semibold text-blue-950 dark:text-blue-200 mb-1">
                 <span className="inline-flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   วันที่กำหนดส่ง (Due Date) <span className="text-red-500">*</span>
                 </span>
               </label>
@@ -269,14 +269,14 @@ export default function TaskFormModal({
                 required
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-md border border-indigo-300 dark:border-indigo-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-indigo-950 dark:text-indigo-200 mb-1">
+              <label className="block text-sm font-semibold text-blue-950 dark:text-blue-200 mb-1">
                 <span className="inline-flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                  <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   เวลากำหนดส่ง (Time Schedule)
                 </span>
               </label>
@@ -284,7 +284,7 @@ export default function TaskFormModal({
                 type="time"
                 value={dueTime}
                 onChange={(e) => setDueTime(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-md border border-indigo-300 dark:border-indigo-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md border border-blue-300 dark:border-blue-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -301,7 +301,7 @@ export default function TaskFormModal({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-2.5 py-1 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-xs font-medium text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800"
+                className="px-2.5 py-1 rounded-md bg-blue-50 dark:bg-blue-950/60 text-xs font-medium text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-blue-200 dark:border-blue-800"
               >
                 + เลือกรูปภาพ / ไฟล์แนบ
               </button>
@@ -323,7 +323,7 @@ export default function TaskFormModal({
             {attachments.length === 0 ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-500 rounded-md p-4 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-900/50"
+                className="border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-500 rounded-md p-4 text-center cursor-pointer transition-colors bg-slate-50/50 dark:bg-slate-900/50"
               >
                 <div className="flex items-center justify-center gap-2 text-slate-400 mb-1">
                   <ImageIcon className="w-5 h-5" />
@@ -353,7 +353,7 @@ export default function TaskFormModal({
                             className="w-10 h-10 rounded-xs object-cover border border-slate-200 dark:border-slate-700 shrink-0"
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-xs bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+                          <div className="w-10 h-10 rounded-xs bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0">
                             <FileText className="w-5 h-5" />
                           </div>
                         )}
@@ -399,7 +399,7 @@ export default function TaskFormModal({
                     onClick={() => toggleUserTag(user.id)}
                     className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors flex items-center gap-1.5 ${
                       selected
-                        ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs"
+                        ? "bg-blue-600 text-white border-blue-600 shadow-2xs"
                         : "bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
                     }`}
                   >
@@ -429,7 +429,7 @@ export default function TaskFormModal({
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50"
+              className="px-5 py-2 rounded-md text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50"
             >
               {submitting
                 ? "กำลังบันทึก..."

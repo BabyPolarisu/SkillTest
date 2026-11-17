@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Category, Task, User } from "@/types/todo";
+import { getScheduleUrgency } from "@/lib/schedule";
 import {
   CheckCircle2,
   Clock,
@@ -32,9 +33,9 @@ export default function DashboardStats({
   const pending = tasks.filter((t) => t.status === "pending").length;
   const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-  const todayStr = new Date().toISOString().split("T")[0];
-  const overdueTasks = tasks.filter(
-    (t) => t.status !== "completed" && t.dueDate < todayStr
+  const urgentTasks = tasks.filter(
+    (t) =>
+      t.status !== "completed" && getScheduleUrgency(t.dueDate).level === "red"
   );
 
   const upcomingTasks = tasks
@@ -61,23 +62,11 @@ export default function DashboardStats({
   const getUserName = (id: string) =>
     users.find((u) => u.id === id)?.name || "ไม่ระบุ";
 
-  const getRelativeDayLabel = (dueDate: string) => {
-    const today = new Date(todayStr);
-    const target = new Date(dueDate);
-    const diffDays = Math.round(
-      (target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    if (diffDays < 0) return `เลยกำหนด ${Math.abs(diffDays)} วัน`;
-    if (diffDays === 0) return "วันนี้";
-    if (diffDays === 1) return "พรุ่งนี้";
-    return `อีก ${diffDays} วัน`;
-  };
-
   return (
     <div className="space-y-6">
       {/* Top Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white/90 dark:bg-slate-800/90 rounded-lg p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
           <div>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               งานทั้งหมด
@@ -89,12 +78,12 @@ export default function DashboardStats({
               สำเร็จแล้ว {completionRate}% ของทั้งหมด
             </p>
           </div>
-          <div className="w-12 h-12 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center">
             <ListTodo className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-white/90 dark:bg-slate-800/90 rounded-lg p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
           <div>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               รอดำเนินการ (Pending)
@@ -103,9 +92,9 @@ export default function DashboardStats({
               {pending}
             </p>
             <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-              {overdueTasks.length > 0
-                ? `เลยกำหนดส่ง ${overdueTasks.length} งาน`
-                : "ไม่มีงานที่เลยกำหนด"}
+              {urgentTasks.length > 0
+                ? `ครบกำหนดวันนี้/พรุ่งนี้ ${urgentTasks.length} งาน`
+                : "ไม่มีงานเร่งด่วน"}
             </p>
           </div>
           <div className="w-12 h-12 rounded-md bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center">
@@ -113,24 +102,24 @@ export default function DashboardStats({
           </div>
         </div>
 
-        <div className="bg-white/90 dark:bg-slate-800/90 rounded-lg p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
           <div>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               กำลังทำ (In Progress)
             </p>
-            <p className="text-3xl font-bold text-sky-600 dark:text-sky-400 mt-1">
+            <p className="text-3xl font-bold text-blue-600 dark:text-sky-400 mt-1">
               {inProgress}
             </p>
             <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
               กำลังดำเนินการอยู่
             </p>
           </div>
-          <div className="w-12 h-12 rounded-md bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-md bg-blue-50 dark:bg-sky-950/60 text-blue-600 dark:text-sky-400 flex items-center justify-center">
             <Clock className="w-6 h-6" />
           </div>
         </div>
 
-        <div className="bg-white/90 dark:bg-slate-800/90 rounded-lg p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs flex items-center justify-between">
           <div>
             <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
               เสร็จสิ้น (Completed)
@@ -154,9 +143,9 @@ export default function DashboardStats({
       {/* Category Progress & Upcoming Schedule */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Category Breakdown */}
-        <div className="bg-white/90 dark:bg-slate-800/90 rounded-lg p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-xs">
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs">
           <div className="flex items-center gap-2 mb-4">
-            <FolderKanban className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+            <FolderKanban className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             <h3 className="font-semibold text-slate-800 dark:text-slate-100">
               สัดส่วนงานแยกตามหมวดหมู่
             </h3>
@@ -199,18 +188,30 @@ export default function DashboardStats({
           )}
         </div>
 
-        {/* Upcoming Deadlines Schedule */}
-        <div className="bg-white/90 dark:bg-slate-800/90 rounded-lg p-5 border border-slate-200/80 dark:border-slate-700/80 shadow-xs">
-          <div className="flex items-center justify-between mb-4">
+        {/* Upcoming Deadlines Schedule with 3-Color Indicator */}
+        <div className="bg-white dark:bg-slate-800/90 rounded-lg p-5 border border-blue-100 dark:border-slate-700/80 shadow-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
             <div className="flex items-center gap-2">
-              <CalendarClock className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+              <CalendarClock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               <h3 className="font-semibold text-slate-800 dark:text-slate-100">
-                ตารางกำหนดเวลาส่งงานที่ใกล้ถึง (Upcoming Schedule)
+                ตารางกำหนดเวลาส่งงาน (Upcoming Schedule)
               </h3>
             </div>
-            <span className="text-xs text-slate-400 dark:text-slate-500">
-              คลิกเพื่อดูงาน
-            </span>
+            {/* 3-Color Legend */}
+            <div className="flex flex-wrap items-center gap-2 text-[11px] font-medium text-slate-600 dark:text-slate-400">
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                วันนี้/พรุ่งนี้
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
+                2-4 วัน
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
+                5+ วัน
+              </span>
+            </div>
           </div>
 
           {upcomingTasks.length === 0 ? (
@@ -220,18 +221,13 @@ export default function DashboardStats({
           ) : (
             <div className="space-y-2.5">
               {upcomingTasks.map((task) => {
-                const isOverdue = task.dueDate < todayStr;
-                const relativeLabel = getRelativeDayLabel(task.dueDate);
+                const urgency = getScheduleUrgency(task.dueDate);
                 return (
                   <button
                     key={task.id}
                     type="button"
                     onClick={() => onSelectTask && onSelectTask(task)}
-                    className={`w-full text-left p-3 rounded-md border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                      isOverdue
-                        ? "bg-red-50/50 dark:bg-red-950/30 border-red-200 dark:border-red-800/70 hover:bg-red-50 dark:hover:bg-red-950/50"
-                        : "bg-slate-50/80 dark:bg-slate-900/50 border-slate-200/90 dark:border-slate-700 hover:bg-indigo-50/50 dark:hover:bg-slate-700/60 hover:border-indigo-300 dark:hover:border-indigo-500/60"
-                    }`}
+                    className="w-full text-left p-3 rounded-md border border-slate-200/90 dark:border-slate-700 bg-slate-50/60 dark:bg-slate-900/50 hover:bg-blue-50/50 dark:hover:bg-slate-700/60 hover:border-blue-300 dark:hover:border-blue-500/60 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                   >
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
@@ -248,40 +244,22 @@ export default function DashboardStats({
                       </div>
                     </div>
 
-                    {/* Prominent Square Schedule Badge */}
+                    {/* 3-Color Prominent Square Schedule Badge */}
                     <div
-                      className={`shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-md border ${
-                        isOverdue
-                          ? "bg-red-600 text-white border-red-600"
-                          : "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 border-indigo-200 dark:border-indigo-500/40 shadow-2xs"
-                      }`}
+                      className={`shrink-0 flex items-center gap-2.5 px-3 py-2 rounded-md border ${urgency.boxClass}`}
                     >
                       <div className="text-right">
                         <div className="flex items-center justify-end gap-1.5 text-xs font-semibold">
-                          <Calendar
-                            className={`w-3.5 h-3.5 ${
-                              isOverdue
-                                ? "text-white"
-                                : "text-indigo-600 dark:text-indigo-400"
-                            }`}
-                          />
+                          <Calendar className={`w-3.5 h-3.5 ${urgency.iconClass}`} />
                           <span>{task.dueDate}</span>
                           <span
-                            className={`px-1.5 py-0.2 rounded-xs text-[10px] font-bold ${
-                              isOverdue
-                                ? "bg-white/20 text-white"
-                                : "bg-indigo-50 dark:bg-indigo-950/80 text-indigo-700 dark:text-indigo-300"
-                            }`}
+                            className={`px-1.5 py-0.5 rounded-xs text-[10px] font-bold ${urgency.badgeClass}`}
                           >
-                            {relativeLabel}
+                            {urgency.label}
                           </span>
                         </div>
                         <div
-                          className={`flex items-center justify-end gap-1 text-sm font-bold mt-0.5 ${
-                            isOverdue
-                              ? "text-white"
-                              : "text-indigo-700 dark:text-indigo-300"
-                          }`}
+                          className={`flex items-center justify-end gap-1 text-sm font-bold mt-0.5 ${urgency.textClass}`}
                         >
                           <Clock className="w-3.5 h-3.5" />
                           <span>เวลา {task.dueTime} น.</span>

@@ -58,8 +58,8 @@ export default function UserAuthModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-md w-full shadow-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+      <div className="bg-white dark:bg-slate-800 rounded-lg max-w-md w-full shadow-xl border border-blue-100 dark:border-slate-700 overflow-hidden">
+        <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-blue-50/40 dark:bg-slate-900/40">
           <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
             {mode === "register" ? "เพิ่มบัญชีผู้ใช้ใหม่" : "เข้าสู่ระบบด้วยอีเมล"}
           </h2>
@@ -81,7 +81,7 @@ export default function UserAuthModal({
               }}
               className={`flex-1 py-1.5 text-sm font-medium rounded-xs transition-colors flex items-center justify-center gap-1.5 ${
                 mode === "register"
-                  ? "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-2xs"
+                  ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-2xs"
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
               }`}
             >
@@ -96,7 +96,7 @@ export default function UserAuthModal({
               }}
               className={`flex-1 py-1.5 text-sm font-medium rounded-xs transition-colors flex items-center justify-center gap-1.5 ${
                 mode === "login"
-                  ? "bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 shadow-2xs"
+                  ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-2xs"
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
               }`}
             >
@@ -124,7 +124,7 @@ export default function UserAuthModal({
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="เช่น Somchai Jaidee"
-                    className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -136,7 +136,7 @@ export default function UserAuthModal({
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
                     placeholder="เช่น Backend Developer, QA Tester"
-                    className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </>
@@ -152,7 +152,7 @@ export default function UserAuthModal({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@email.com"
-                className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -165,14 +165,14 @@ export default function UserAuthModal({
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="ค่าเริ่มต้นสำหรับบัญชีทดสอบ: password123"
-                className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 bg-indigo-600 text-white rounded-md text-sm font-medium hover:bg-indigo-700 disabled:opacity-50"
+              className="w-full py-2.5 bg-blue-600 text-white rounded-md text-sm font-medium hover:bg-blue-700 disabled:opacity-50"
             >
               {loading
                 ? "กำลังดำเนินการ..."
