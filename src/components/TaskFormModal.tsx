@@ -93,7 +93,7 @@ export default function TaskFormModal({
     if (!files || files.length === 0) return;
 
     setFileError("");
-    const maxFileSize = 4 * 1024 * 1024; // 4MB per file limit
+    const maxFileSize = 4 * 1024 * 1024;
     const newAttachments: TaskAttachment[] = [];
 
     for (const file of Array.from(files)) {
@@ -161,14 +161,14 @@ export default function TaskFormModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-xl w-full shadow-xl border border-slate-200 overflow-hidden max-h-[92vh] flex flex-col">
+      <div className="bg-white rounded-lg max-w-xl w-full shadow-xl border border-slate-200 overflow-hidden max-h-[92vh] flex flex-col">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-slate-800">
             {initialTask ? "แก้ไขรายการงาน" : "เพิ่มรายการงานใหม่"}
           </h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 p-1 rounded-lg"
+            className="text-slate-400 hover:text-slate-600 p-1 rounded-md"
           >
             <X className="w-5 h-5" />
           </button>
@@ -188,7 +188,7 @@ export default function TaskFormModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="เช่น สรุปรายงานการประชุมประจำสัปดาห์"
-              className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3.5 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
@@ -201,7 +201,7 @@ export default function TaskFormModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="ระบุรายละเอียดเพิ่มเติมหรือสิ่งที่ต้องเตรียม..."
-              className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3.5 py-2 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
 
@@ -213,7 +213,7 @@ export default function TaskFormModal({
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="">ไม่ระบุหมวดหมู่</option>
                 {categories.map((cat) => (
@@ -231,7 +231,7 @@ export default function TaskFormModal({
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as TaskStatus)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="pending">รอดำเนินการ (Pending)</option>
                 <option value="in_progress">กำลังทำ (In Progress)</option>
@@ -246,7 +246,7 @@ export default function TaskFormModal({
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3 py-2 rounded-md border border-slate-300 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
               >
                 <option value="low">ต่ำ (Low)</option>
                 <option value="medium">ปานกลาง (Medium)</option>
@@ -255,12 +255,13 @@ export default function TaskFormModal({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Highlighted Schedule Inputs */}
+          <div className="p-3.5 rounded-md bg-indigo-50/60 border border-indigo-200 grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-semibold text-indigo-950 mb-1">
                 <span className="inline-flex items-center gap-1.5">
-                  <Calendar className="w-4 h-4 text-slate-400" />
-                  วันที่กำหนดส่ง <span className="text-red-500">*</span>
+                  <Calendar className="w-4 h-4 text-indigo-600" />
+                  วันที่กำหนดส่ง (Due Date) <span className="text-red-500">*</span>
                 </span>
               </label>
               <input
@@ -268,27 +269,27 @@ export default function TaskFormModal({
                 required
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md border border-indigo-300 bg-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
+              <label className="block text-sm font-semibold text-indigo-950 mb-1">
                 <span className="inline-flex items-center gap-1.5">
-                  <Clock className="w-4 h-4 text-slate-400" />
-                  เวลากำหนดส่ง
+                  <Clock className="w-4 h-4 text-indigo-600" />
+                  เวลากำหนดส่ง (Time Schedule)
                 </span>
               </label>
               <input
                 type="time"
                 value={dueTime}
                 onChange={(e) => setDueTime(e.target.value)}
-                className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="w-full px-3.5 py-2 rounded-md border border-indigo-300 bg-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
           </div>
 
-          {/* Attachments Section (Images & Files) */}
+          {/* Attachments Section */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="block text-sm font-medium text-slate-700">
@@ -300,7 +301,7 @@ export default function TaskFormModal({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="text-xs font-medium text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1"
+                className="px-2.5 py-1 rounded-md bg-indigo-50 text-xs font-medium text-indigo-700 hover:bg-indigo-100 border border-indigo-200"
               >
                 + เลือกรูปภาพ / ไฟล์แนบ
               </button>
@@ -322,7 +323,7 @@ export default function TaskFormModal({
             {attachments.length === 0 ? (
               <div
                 onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-slate-200 hover:border-indigo-300 rounded-xl p-4 text-center cursor-pointer transition-colors bg-slate-50/50"
+                className="border-2 border-dashed border-slate-200 hover:border-indigo-300 rounded-md p-4 text-center cursor-pointer transition-colors bg-slate-50/50"
               >
                 <div className="flex items-center justify-center gap-2 text-slate-400 mb-1">
                   <ImageIcon className="w-5 h-5" />
@@ -336,23 +337,23 @@ export default function TaskFormModal({
                 </p>
               </div>
             ) : (
-              <div className="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+              <div className="space-y-2 bg-slate-50 p-3 rounded-md border border-slate-200">
                 {attachments.map((att) => {
                   const isImage = att.type.startsWith("image/");
                   return (
                     <div
                       key={att.id}
-                      className="flex items-center justify-between gap-3 bg-white p-2 rounded-lg border border-slate-200/80"
+                      className="flex items-center justify-between gap-3 bg-white p-2 rounded-md border border-slate-200/80"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
                         {isImage ? (
                           <img
                             src={att.url}
                             alt={att.name}
-                            className="w-10 h-10 rounded-md object-cover border border-slate-200 shrink-0"
+                            className="w-10 h-10 rounded-xs object-cover border border-slate-200 shrink-0"
                           />
                         ) : (
-                          <div className="w-10 h-10 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                          <div className="w-10 h-10 rounded-xs bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
                             <FileText className="w-5 h-5" />
                           </div>
                         )}
@@ -380,6 +381,7 @@ export default function TaskFormModal({
             )}
           </div>
 
+          {/* Rectangular User Tag Buttons */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
               <span className="inline-flex items-center gap-1.5">
@@ -395,14 +397,14 @@ export default function TaskFormModal({
                     key={user.id}
                     type="button"
                     onClick={() => toggleUserTag(user.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors flex items-center gap-1.5 ${
+                    className={`px-3 py-1.5 rounded-md text-xs font-medium border transition-colors flex items-center gap-1.5 ${
                       selected
-                        ? "bg-indigo-600 text-white border-indigo-600"
-                        : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100"
+                        ? "bg-indigo-600 text-white border-indigo-600 shadow-2xs"
+                        : "bg-slate-50 text-slate-700 border-slate-300 hover:bg-slate-100"
                     }`}
                   >
                     <span
-                      className="w-2 h-2 rounded-full"
+                      className="w-2.5 h-2.5 rounded-xs"
                       style={{
                         backgroundColor: selected
                           ? "#ffffff"
@@ -420,14 +422,14 @@ export default function TaskFormModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-100"
+              className="px-4 py-2 rounded-md text-sm font-medium text-slate-600 border border-slate-200 hover:bg-slate-100"
             >
               ยกเลิก
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-5 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50"
+              className="px-5 py-2 rounded-md text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50"
             >
               {submitting
                 ? "กำลังบันทึก..."
