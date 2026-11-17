@@ -74,29 +74,6 @@ export async function POST(req: NextRequest) {
     };
 
     db.users.push(newUser);
-
-    // Seed default categories for the new user
-    db.categories.push(
-      {
-        id: `c_${Date.now()}_1`,
-        userId: newUserId,
-        name: "งานทั่วไป (General)",
-        color: "#4f46e5",
-      },
-      {
-        id: `c_${Date.now()}_2`,
-        userId: newUserId,
-        name: "งานด่วน (Urgent)",
-        color: "#ef4444",
-      },
-      {
-        id: `c_${Date.now()}_3`,
-        userId: newUserId,
-        name: "ส่วนตัว (Personal)",
-        color: "#10b981",
-      }
-    );
-
     writeDb(db);
 
     const { password: _p, ...safeUser } = newUser;

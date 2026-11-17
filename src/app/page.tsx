@@ -11,14 +11,12 @@ import { Category, Task, TaskStatus, User } from "@/types/todo";
 import DashboardStats from "@/components/DashboardStats";
 import TaskFormModal from "@/components/TaskFormModal";
 import TaskDetailModal from "@/components/TaskDetailModal";
-import CategoryManagerModal from "@/components/CategoryManagerModal";
 import UserAuthModal from "@/components/UserAuthModal";
 import {
   CheckSquare,
   Plus,
   Search,
   Filter,
-  FolderCog,
   Calendar,
   Clock,
   Edit3,
@@ -31,13 +29,14 @@ import {
   CheckCheck,
   Paperclip,
   Eye,
+  X,
+  ChevronDown,
 } from "lucide-react";
 
 export default function HomePage() {
   const [users, setUsers] = useState<User[]>([]);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,7 +48,6 @@ export default function HomePage() {
   const [highlightedTaskId, setHighlightedTaskId] = useState<string | null>(
     null
   );
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Notification states
@@ -61,12 +59,14 @@ export default function HomePage() {
 
   // Search & Filter states
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [taggedUserFilter, setTaggedUserFilter] = useState("all");
+  const [personFilter, setPersonFilter] = useState("all");
   const [scopeFilter, setScopeFilter] = useState<"all" | "mine" | "tagged">(
     "all"
   );
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   // Load read notifications from localStorage
   useEffect(() => {
@@ -80,11 +80,17 @@ export default function HomePage() {
     }
   }, []);
 
-  // Close notification dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
         setIsNotifOpen(false);
+      }
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(e.target as Node)
+      ) {
+        setIsSearchDropdownOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -117,7 +123,6 @@ export default function HomePage() {
     const taskData = await taskRes.json();
 
     setCategories(catData.categories || []);
-    setAllCategories(catData.allCategories || catData.categories || []);
     setTasks(taskData.tasks || []);
   }, []);
 
@@ -126,6 +131,16 @@ export default function HomePage() {
       fetchUserData(currentUser.id);
     }
   }, [currentUser, fetchUserData]);
+
+  const getCategoryById = useCallback(
+    (catId: string) => categories.find((c) => c.id === catId),
+    [categories]
+  );
+
+  const getUserById = useCallback(
+    (userId: string) => users.find((u) => u.id === userId),
+    [users]
+  );
 
   // Tasks where current user is tagged by someone else
   const taggedTasksForMe = useMemo(() => {
@@ -178,10 +193,19 @@ export default function HomePage() {
     });
   };
 
-  // Jump directly to a task from notification click
+  const resetFilters = () => {
+    setSearchQuery("");
+    setCategoryFilter("all");
+    setStatusFilter("all");
+    setPersonFilter("all");
+    setScopeFilter("all");
+  };
+
+  // Jump directly to a task from notification or search dropdown click
   const jumpToTask = (task: Task) => {
     markTaskAsRead(task.id);
     setIsNotifOpen(false);
+    setIsSearchDropdownOpen(false);
     resetFilters();
     setHighlightedTaskId(task.id);
     setViewingTaskId(task.id);
@@ -249,39 +273,59 @@ export default function HomePage() {
     }
   };
 
-  // Handlers for Category CRUD
-  const handleAddCategory = async (name: string, color: string) => {
-    if (!currentUser) return;
-    const res = await fetch("/api/categories", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: currentUser.id, name, color }),
+  // Suggestions for Search Dropdown (Matching People & Matching Tasks)
+  const searchSuggestions = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+
+    const matchedUsers = users.filter((u) => {
+      if (!q) return true;
+      return (
+        u.name.toLowerCase().includes(q) ||
+        u.role.toLowerCase().includes(q) ||
+        u.email.toLowerCase().includes(q)
+      );
     });
-    if (res.ok) {
-      await fetchUserData(currentUser.id);
-    }
-  };
 
-  const handleDeleteCategory = async (id: string) => {
-    if (!currentUser) return;
-    const res = await fetch(`/api/categories?id=${id}`, { method: "DELETE" });
-    if (res.ok) {
-      await fetchUserData(currentUser.id);
-      if (categoryFilter === id) setCategoryFilter("all");
-    }
-  };
+    const matchedTasks = tasks
+      .filter((t) => {
+        if (!q) return true;
+        const ownerName = getUserById(t.ownerId)?.name.toLowerCase() || "";
+        const taggedNames = t.taggedUserIds
+          .map((id) => getUserById(id)?.name.toLowerCase() || "")
+          .join(" ");
+        return (
+          t.title.toLowerCase().includes(q) ||
+          t.description.toLowerCase().includes(q) ||
+          ownerName.includes(q) ||
+          taggedNames.includes(q)
+        );
+      })
+      .slice(0, 6);
 
-  // Filtered tasks
+    return { matchedUsers, matchedTasks };
+  }, [searchQuery, users, tasks, getUserById]);
+
+  // Filtered tasks for main list
   const filteredTasks = useMemo(() => {
     if (!currentUser) return [];
     return tasks.filter((task) => {
+      // Search by task title, description, owner name, or tagged user names
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchTitle = task.title.toLowerCase().includes(q);
         const matchDesc = task.description.toLowerCase().includes(q);
-        if (!matchTitle && !matchDesc) return false;
+        const ownerName = getUserById(task.ownerId)?.name.toLowerCase() || "";
+        const matchOwner = ownerName.includes(q);
+        const matchTaggedUser = task.taggedUserIds.some((uid) =>
+          (getUserById(uid)?.name.toLowerCase() || "").includes(q)
+        );
+
+        if (!matchTitle && !matchDesc && !matchOwner && !matchTaggedUser) {
+          return false;
+        }
       }
 
+      // Scope filter
       if (scopeFilter === "mine" && task.ownerId !== currentUser.id) {
         return false;
       }
@@ -292,19 +336,21 @@ export default function HomePage() {
         return false;
       }
 
+      // Fixed Category filter
       if (categoryFilter !== "all" && task.categoryId !== categoryFilter) {
         return false;
       }
 
+      // Status filter
       if (statusFilter !== "all" && task.status !== statusFilter) {
         return false;
       }
 
-      if (
-        taggedUserFilter !== "all" &&
-        !task.taggedUserIds.includes(taggedUserFilter)
-      ) {
-        return false;
+      // Person filter (matches either task owner or tagged users)
+      if (personFilter !== "all") {
+        const isOwner = task.ownerId === personFilter;
+        const isTagged = task.taggedUserIds.includes(personFilter);
+        if (!isOwner && !isTagged) return false;
       }
 
       return true;
@@ -316,25 +362,18 @@ export default function HomePage() {
     scopeFilter,
     categoryFilter,
     statusFilter,
-    taggedUserFilter,
+    personFilter,
+    getUserById,
   ]);
-
-  const resetFilters = () => {
-    setSearchQuery("");
-    setCategoryFilter("all");
-    setStatusFilter("all");
-    setTaggedUserFilter("all");
-    setScopeFilter("all");
-  };
-
-  const getCategoryById = (catId: string) =>
-    allCategories.find((c) => c.id === catId);
-
-  const getUserById = (userId: string) => users.find((u) => u.id === userId);
 
   const viewingTask = useMemo(
     () => tasks.find((t) => t.id === viewingTaskId) || null,
     [tasks, viewingTaskId]
+  );
+
+  const selectedPersonObj = useMemo(
+    () => (personFilter !== "all" ? getUserById(personFilter) : undefined),
+    [personFilter, getUserById]
   );
 
   const todayStr = new Date().toISOString().split("T")[0];
@@ -571,15 +610,6 @@ export default function HomePage() {
 
             <button
               type="button"
-              onClick={() => setIsCategoryModalOpen(true)}
-              className="px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 inline-flex items-center gap-1.5"
-            >
-              <FolderCog className="w-4 h-4 text-slate-500" />
-              จัดการหมวดหมู่
-            </button>
-
-            <button
-              type="button"
               onClick={() => {
                 setEditingTask(null);
                 setIsTaskModalOpen(true);
@@ -602,19 +632,154 @@ export default function HomePage() {
           />
         )}
 
-        {/* Search & Filter Controls */}
+        {/* Smart Search & Filter Controls */}
         <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200 shadow-xs space-y-4">
           <div className="flex flex-col md:flex-row gap-3">
-            {/* Search Input */}
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            {/* Smart Search Input with Dropdown for People & Tasks */}
+            <div className="relative flex-1" ref={searchContainerRef}>
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="ค้นหาชื่องาน หรือรายละเอียดงาน..."
-                className="w-full pl-9 pr-4 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                onFocus={() => setIsSearchDropdownOpen(true)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setIsSearchDropdownOpen(true);
+                }}
+                placeholder="ค้นหาชื่อคน (ผู้สร้าง/ผู้ถูกแท็ก) หรือพิมพ์ค้นหาชื่องาน..."
+                className="w-full pl-9 pr-16 py-2 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
+              <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery("")}
+                    className="p-1 text-slate-400 hover:text-slate-600 rounded"
+                    title="ล้างคำค้นหา"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setIsSearchDropdownOpen((prev) => !prev)}
+                  className="p-1 text-slate-400 hover:text-slate-600 rounded"
+                  title="เปิดรายการตัวเลือก"
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Autocomplete Dropdown */}
+              {isSearchDropdownOpen && (
+                <div className="absolute left-0 right-0 mt-1.5 bg-white rounded-xl shadow-xl border border-slate-200 z-40 max-h-96 overflow-y-auto divide-y divide-slate-100">
+                  {/* People Section */}
+                  <div className="p-2.5">
+                    <p className="px-2 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <Users className="w-3.5 h-3.5 text-indigo-600" />
+                      ค้นหาตามรายชื่อผู้ใช้งาน ({searchSuggestions.matchedUsers.length})
+                    </p>
+                    {searchSuggestions.matchedUsers.length === 0 ? (
+                      <p className="px-2 py-2 text-xs text-slate-400">
+                        ไม่พบรายชื่อผู้ใช้งานที่ตรงกับคำค้นหา
+                      </p>
+                    ) : (
+                      <div className="mt-1 grid grid-cols-1 sm:grid-cols-2 gap-1">
+                        {searchSuggestions.matchedUsers.map((u) => {
+                          const userTaskCount = tasks.filter(
+                            (t) =>
+                              t.ownerId === u.id ||
+                              t.taggedUserIds.includes(u.id)
+                          ).length;
+                          const isSelected = personFilter === u.id;
+                          return (
+                            <button
+                              key={u.id}
+                              type="button"
+                              onClick={() => {
+                                setPersonFilter(isSelected ? "all" : u.id);
+                                setSearchQuery("");
+                                setIsSearchDropdownOpen(false);
+                              }}
+                              className={`flex items-center justify-between px-3 py-2 rounded-lg text-left transition-colors ${
+                                isSelected
+                                  ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                                  : "hover:bg-slate-50 text-slate-700"
+                              }`}
+                            >
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span
+                                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                                  style={{ backgroundColor: u.avatarColor }}
+                                />
+                                <div className="min-w-0">
+                                  <p className="text-xs font-semibold truncate">
+                                    {u.name}
+                                  </p>
+                                  <p className="text-[11px] text-slate-400 truncate">
+                                    {u.role}
+                                  </p>
+                                </div>
+                              </div>
+                              <span className="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-medium shrink-0">
+                                {userTaskCount} งาน
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Tasks Section */}
+                  <div className="p-2.5">
+                    <p className="px-2 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <CheckSquare className="w-3.5 h-3.5 text-indigo-600" />
+                      รายการงานที่ตรงกับคำค้นหา ({searchSuggestions.matchedTasks.length})
+                    </p>
+                    {searchSuggestions.matchedTasks.length === 0 ? (
+                      <p className="px-2 py-2 text-xs text-slate-400">
+                        ไม่พบรายการงานที่ตรงกับคำค้นหา
+                      </p>
+                    ) : (
+                      <div className="mt-1 space-y-1">
+                        {searchSuggestions.matchedTasks.map((t) => {
+                          const cat = getCategoryById(t.categoryId);
+                          const owner = getUserById(t.ownerId);
+                          return (
+                            <button
+                              key={t.id}
+                              type="button"
+                              onClick={() => jumpToTask(t)}
+                              className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg hover:bg-slate-50 text-left transition-colors"
+                            >
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  {cat && (
+                                    <span
+                                      className="w-2 h-2 rounded-full shrink-0"
+                                      style={{ backgroundColor: cat.color }}
+                                    />
+                                  )}
+                                  <p className="text-xs sm:text-sm font-medium text-slate-800 truncate">
+                                    {t.title}
+                                  </p>
+                                </div>
+                                <p className="text-[11px] text-slate-400 mt-0.5 truncate">
+                                  ผู้สร้าง: {owner?.name} • กำหนดส่ง {t.dueDate}
+                                </p>
+                              </div>
+                              <span className="text-[11px] text-indigo-600 font-medium shrink-0">
+                                เปิดดู →
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Scope Tabs (All / My Tasks / Tagged) */}
@@ -673,25 +838,63 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Filter Dropdowns */}
+          {/* Fixed System Category Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            <button
+              type="button"
+              onClick={() => setCategoryFilter("all")}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors shrink-0 ${
+                categoryFilter === "all"
+                  ? "bg-slate-800 text-white border-slate-800"
+                  : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+              }`}
+            >
+              ทุกหมวดหมู่ ({tasks.length})
+            </button>
+            {categories.map((cat) => {
+              const count = tasks.filter((t) => t.categoryId === cat.id).length;
+              const active = categoryFilter === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() =>
+                    setCategoryFilter(active ? "all" : cat.id)
+                  }
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors inline-flex items-center gap-1.5 shrink-0 ${
+                    active
+                      ? "text-white border-transparent shadow-xs"
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                  }`}
+                  style={
+                    active ? { backgroundColor: cat.color } : undefined
+                  }
+                >
+                  <span
+                    className="w-2 h-2 rounded-full"
+                    style={{
+                      backgroundColor: active ? "#ffffff" : cat.color,
+                    }}
+                  />
+                  <span>{cat.name}</span>
+                  <span
+                    className={`text-[11px] ${
+                      active ? "text-white/90" : "text-slate-400"
+                    }`}
+                  >
+                    ({count})
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Secondary Filter Dropdowns (Status & Person) */}
           <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-slate-100">
             <div className="flex items-center gap-1.5 text-xs font-medium text-slate-500">
               <Filter className="w-3.5 h-3.5" />
-              ตัวกรอง:
+              ตัวกรองเพิ่มเติม:
             </div>
-
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs sm:text-sm bg-slate-50 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              <option value="all">ทุกหมวดหมู่</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  หมวดหมู่: {cat.name}
-                </option>
-              ))}
-            </select>
 
             <select
               value={statusFilter}
@@ -705,22 +908,39 @@ export default function HomePage() {
             </select>
 
             <select
-              value={taggedUserFilter}
-              onChange={(e) => setTaggedUserFilter(e.target.value)}
+              value={personFilter}
+              onChange={(e) => setPersonFilter(e.target.value)}
               className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs sm:text-sm bg-slate-50 text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
-              <option value="all">ผู้ที่เกี่ยวข้องทั้งหมด</option>
+              <option value="all">บุคคลที่เกี่ยวข้องทั้งหมด</option>
               {users.map((u) => (
                 <option key={u.id} value={u.id}>
-                  แท็ก: {u.name}
+                  บุคคล: {u.name} ({u.role})
                 </option>
               ))}
             </select>
 
+            {selectedPersonObj && (
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-200">
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: selectedPersonObj.avatarColor }}
+                />
+                กำลังดูงานของ: {selectedPersonObj.name}
+                <button
+                  type="button"
+                  onClick={() => setPersonFilter("all")}
+                  className="hover:text-indigo-900"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </span>
+            )}
+
             {(searchQuery ||
               categoryFilter !== "all" ||
               statusFilter !== "all" ||
-              taggedUserFilter !== "all" ||
+              personFilter !== "all" ||
               scopeFilter !== "all") && (
               <button
                 type="button"
@@ -728,7 +948,7 @@ export default function HomePage() {
                 className="text-xs text-indigo-600 hover:text-indigo-800 font-medium inline-flex items-center gap-1 ml-auto"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                ล้างตัวกรอง
+                ล้างตัวกรองทั้งหมด
               </button>
             )}
           </div>
@@ -752,14 +972,11 @@ export default function HomePage() {
               </p>
               <button
                 type="button"
-                onClick={() => {
-                  setEditingTask(null);
-                  setIsTaskModalOpen(true);
-                }}
+                onClick={resetFilters}
                 className="px-4 py-2 rounded-lg text-xs font-medium bg-indigo-50 text-indigo-600 hover:bg-indigo-100 inline-flex items-center gap-1.5"
               >
-                <Plus className="w-4 h-4" />
-                สร้างรายการงานใหม่
+                <RotateCcw className="w-4 h-4" />
+                แสดงงานทั้งหมด
               </button>
             </div>
           ) : (
@@ -1035,14 +1252,6 @@ export default function HomePage() {
             categories={categories}
             users={users}
             currentUserId={currentUser.id}
-          />
-
-          <CategoryManagerModal
-            isOpen={isCategoryModalOpen}
-            onClose={() => setIsCategoryModalOpen(false)}
-            categories={categories}
-            onAddCategory={handleAddCategory}
-            onDeleteCategory={handleDeleteCategory}
           />
 
           <UserAuthModal
