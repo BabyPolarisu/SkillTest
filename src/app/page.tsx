@@ -1,9 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { Category, Task, TaskStatus, User } from "@/types/todo";
 import DashboardStats from "@/components/DashboardStats";
 import TaskFormModal from "@/components/TaskFormModal";
+import TaskDetailModal from "@/components/TaskDetailModal";
 import CategoryManagerModal from "@/components/CategoryManagerModal";
 import UserAuthModal from "@/components/UserAuthModal";
 import {
@@ -22,6 +29,8 @@ import {
   RotateCcw,
   Bell,
   CheckCheck,
+  Paperclip,
+  Eye,
 } from "lucide-react";
 
 export default function HomePage() {
@@ -36,12 +45,18 @@ export default function HomePage() {
   const [showDashboard, setShowDashboard] = useState(true);
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const [viewingTaskId, setViewingTaskId] = useState<string | null>(null);
+  const [highlightedTaskId, setHighlightedTaskId] = useState<string | null>(
+    null
+  );
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Notification states
   const [isNotifOpen, setIsNotifOpen] = useState(false);
-  const [readNotifMap, setReadNotifMap] = useState<Record<string, string[]>>({});
+  const [readNotifMap, setReadNotifMap] = useState<Record<string, string[]>>(
+    {}
+  );
   const notifRef = useRef<HTMLDivElement>(null);
 
   // Search & Filter states
@@ -163,6 +178,26 @@ export default function HomePage() {
     });
   };
 
+  // Jump directly to a task from notification click
+  const jumpToTask = (task: Task) => {
+    markTaskAsRead(task.id);
+    setIsNotifOpen(false);
+    resetFilters();
+    setHighlightedTaskId(task.id);
+    setViewingTaskId(task.id);
+
+    setTimeout(() => {
+      const el = document.getElementById(`task-card-${task.id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 100);
+
+    setTimeout(() => {
+      setHighlightedTaskId((prev) => (prev === task.id ? null : prev));
+    }, 3500);
+  };
+
   // Handlers for Task CRUD
   const handleSaveTask = async (taskData: Partial<Task>) => {
     if (!currentUser) return;
@@ -210,6 +245,7 @@ export default function HomePage() {
     const res = await fetch(`/api/tasks/${taskId}`, { method: "DELETE" });
     if (res.ok) {
       setTasks((prev) => prev.filter((t) => t.id !== taskId));
+      if (viewingTaskId === taskId) setViewingTaskId(null);
     }
   };
 
@@ -295,6 +331,11 @@ export default function HomePage() {
     allCategories.find((c) => c.id === catId);
 
   const getUserById = (userId: string) => users.find((u) => u.id === userId);
+
+  const viewingTask = useMemo(
+    () => tasks.find((t) => t.id === viewingTaskId) || null,
+    [tasks, viewingTaskId]
+  );
 
   const todayStr = new Date().toISOString().split("T")[0];
 
@@ -386,11 +427,7 @@ export default function HomePage() {
                           <button
                             key={t.id}
                             type="button"
-                            onClick={() => {
-                              markTaskAsRead(t.id);
-                              setScopeFilter("tagged");
-                              setIsNotifOpen(false);
-                            }}
+                            onClick={() => jumpToTask(t)}
                             className={`w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors flex items-start gap-3 ${
                               isUnread ? "bg-indigo-50/40" : ""
                             }`}
@@ -410,9 +447,14 @@ export default function HomePage() {
                                   {owner?.name || "ไม่ระบุ"}
                                 </span>
                               </p>
-                              <p className="text-[11px] text-slate-400 mt-1">
-                                กำหนดส่ง: {t.dueDate} เวลา {t.dueTime} น.
-                              </p>
+                              <div className="flex items-center justify-between mt-1">
+                                <span className="text-[11px] text-slate-400">
+                                  กำหนดส่ง: {t.dueDate} • {t.dueTime} น.
+                                </span>
+                                <span className="text-[11px] text-indigo-600 font-medium">
+                                  กดเพื่อเปิดดูงาน →
+                                </span>
+                              </div>
                             </div>
                           </button>
                         );
@@ -486,13 +528,10 @@ export default function HomePage() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => {
-                  setScopeFilter("tagged");
-                  markAllNotifsAsRead();
-                }}
+                onClick={() => jumpToTask(unreadTaggedTasks[0])}
                 className="px-3 py-1 rounded-lg bg-red-600 text-white text-xs font-medium hover:bg-red-700 transition-colors"
               >
-                ดูงานที่ถูกแท็ก
+                เปิดดูงานที่ถูกแท็กทันที
               </button>
               <button
                 type="button"
@@ -512,7 +551,7 @@ export default function HomePage() {
               สวัสดี, {currentUser?.name}
             </h2>
             <p className="text-xs sm:text-sm text-slate-500">
-              จัดการงานของคุณ แบ่งหมวดหมู่ แท็กผู้ที่เกี่ยวข้อง และติดตามความคืบหน้าได้ในที่เดียว
+              จัดการงานของคุณ แนบรูปภาพ/ไฟล์งาน แท็กผู้ที่เกี่ยวข้อง และติดตามความคืบหน้าได้ในที่เดียว
             </p>
           </div>
 
@@ -701,6 +740,9 @@ export default function HomePage() {
             <h3 className="text-sm font-semibold text-slate-700">
               รายการงาน ({filteredTasks.length} รายการ)
             </h3>
+            <span className="text-xs text-slate-400">
+              คลิกที่รายการงานเพื่อดูรายละเอียด รูปภาพ และไฟล์แนบ
+            </span>
           </div>
 
           {filteredTasks.length === 0 ? (
@@ -730,6 +772,11 @@ export default function HomePage() {
                 const isUnreadTagged = unreadTaggedTasks.some(
                   (u) => u.id === task.id
                 );
+                const isHighlighted = highlightedTaskId === task.id;
+                const attachments = task.attachments || [];
+                const previewImgs = attachments
+                  .filter((a) => a.type.startsWith("image/"))
+                  .slice(0, 3);
 
                 const priorityBadge = {
                   high: {
@@ -749,11 +796,15 @@ export default function HomePage() {
                 return (
                   <div
                     key={task.id}
+                    id={`task-card-${task.id}`}
                     onClick={() => {
                       if (isUnreadTagged) markTaskAsRead(task.id);
+                      setViewingTaskId(task.id);
                     }}
-                    className={`bg-white rounded-xl p-4 sm:p-5 border transition-all shadow-xs hover:shadow-md ${
-                      task.status === "completed"
+                    className={`bg-white rounded-xl p-4 sm:p-5 border transition-all shadow-xs hover:shadow-md cursor-pointer ${
+                      isHighlighted
+                        ? "border-indigo-500 ring-2 ring-indigo-200"
+                        : task.status === "completed"
                         ? "border-slate-200 bg-slate-50/60"
                         : isUnreadTagged
                         ? "border-red-300 ring-1 ring-red-100"
@@ -793,6 +844,13 @@ export default function HomePage() {
                               แท็กโดย {owner?.name}
                             </span>
                           )}
+
+                          {attachments.length > 0 && (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                              <Paperclip className="w-3 h-3 text-indigo-600" />
+                              {attachments.length} ไฟล์แนบ
+                            </span>
+                          )}
                         </div>
 
                         {/* Title & Description */}
@@ -807,11 +865,25 @@ export default function HomePage() {
                             {task.title}
                           </h4>
                           {task.description && (
-                            <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+                            <p className="text-sm text-slate-600 mt-1 leading-relaxed line-clamp-2">
                               {task.description}
                             </p>
                           )}
                         </div>
+
+                        {/* Image Thumbnails Preview on Card */}
+                        {previewImgs.length > 0 && (
+                          <div className="flex items-center gap-2 pt-1">
+                            {previewImgs.map((img) => (
+                              <img
+                                key={img.id}
+                                src={img.url}
+                                alt={img.name}
+                                className="w-14 h-14 rounded-lg object-cover border border-slate-200"
+                              />
+                            ))}
+                          </div>
+                        )}
 
                         {/* Meta Info: Schedule & Tagged Users */}
                         <div className="flex flex-wrap items-center gap-4 pt-1 text-xs text-slate-500">
@@ -856,8 +928,11 @@ export default function HomePage() {
                         </div>
                       </div>
 
-                      {/* Right Actions: Status Switcher + Edit/Delete */}
-                      <div className="flex sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0 border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100">
+                      {/* Right Actions: Status Switcher + Detail/Edit/Delete */}
+                      <div
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0 border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-100"
+                      >
                         <select
                           value={task.status}
                           onChange={(e) =>
@@ -884,6 +959,14 @@ export default function HomePage() {
                         </select>
 
                         <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => setViewingTaskId(task.id)}
+                            className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                            title="ดูรายละเอียดและไฟล์แนบ"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </button>
                           <button
                             type="button"
                             onClick={() => {
@@ -925,6 +1008,22 @@ export default function HomePage() {
       {/* Modals */}
       {currentUser && (
         <>
+          <TaskDetailModal
+            task={viewingTask}
+            onClose={() => setViewingTaskId(null)}
+            category={
+              viewingTask ? getCategoryById(viewingTask.categoryId) : undefined
+            }
+            owner={viewingTask ? getUserById(viewingTask.ownerId) : undefined}
+            users={users}
+            onStatusChange={handleStatusChange}
+            onEdit={(task) => {
+              setEditingTask(task);
+              setIsTaskModalOpen(true);
+            }}
+            onDelete={handleDeleteTask}
+          />
+
           <TaskFormModal
             isOpen={isTaskModalOpen}
             onClose={() => {

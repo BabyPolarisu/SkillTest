@@ -16,6 +16,14 @@ export interface Category {
   color: string;
 }
 
+export interface TaskAttachment {
+  id: string;
+  name: string;
+  type: string;
+  size: number;
+  url: string;
+}
+
 export interface Task {
   id: string;
   ownerId: string;
@@ -27,6 +35,7 @@ export interface Task {
   dueDate: string; // YYYY-MM-DD
   dueTime: string; // HH:mm
   taggedUserIds: string[];
+  attachments?: TaskAttachment[];
   createdAt: string;
   updatedAt: string;
 }

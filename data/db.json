@@ -31,6 +31,14 @@
       "password": "password123",
       "role": "Project Manager",
       "avatarColor": "#10b981"
+    },
+    {
+      "id": "u1794896677822",
+      "name": "กฤตธนกร เชื้อประทุม",
+      "email": "richterapirl@gmail.com",
+      "password": "12345",
+      "role": "FullStack Intern",
+      "avatarColor": "#ec4899"
     }
   ],
   "categories": [
@@ -69,6 +77,24 @@
       "userId": "u2",
       "name": "Bug Fixes",
       "color": "#ef4444"
+    },
+    {
+      "id": "c_1794896677822_1",
+      "userId": "u1794896677822",
+      "name": "งานทั่วไป (General)",
+      "color": "#4f46e5"
+    },
+    {
+      "id": "c_1794896677822_2",
+      "userId": "u1794896677822",
+      "name": "งานด่วน (Urgent)",
+      "color": "#ef4444"
+    },
+    {
+      "id": "c_1794896677822_3",
+      "userId": "u1794896677822",
+      "name": "ส่วนตัว (Personal)",
+      "color": "#10b981"
     }
   ],
   "tasks": [
@@ -167,6 +193,22 @@
       ],
       "createdAt": "2026-11-16T15:00:00.000Z",
       "updatedAt": "2026-11-16T15:00:00.000Z"
+    },
+    {
+      "id": "task_1794896839123",
+      "ownerId": "u1794896677822",
+      "title": "Report System",
+      "description": "รายงานการทำงานระบบ",
+      "categoryId": "c_1794896677822_1",
+      "status": "pending",
+      "priority": "medium",
+      "dueDate": "2026-11-17",
+      "dueTime": "17:00",
+      "taggedUserIds": [
+        "u1"
+      ],
+      "createdAt": "2026-11-17T06:27:19.123Z",
+      "updatedAt": "2026-11-17T06:27:19.123Z"
     }
   ]
 }

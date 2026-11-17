@@ -1,8 +1,24 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Category, Task, TaskPriority, TaskStatus, User } from "@/types/todo";
-import { X, Users, Calendar, Clock } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  Category,
+  Task,
+  TaskAttachment,
+  TaskPriority,
+  TaskStatus,
+  User,
+} from "@/types/todo";
+import {
+  X,
+  Users,
+  Calendar,
+  Clock,
+  Paperclip,
+  Image as ImageIcon,
+  FileText,
+  Trash2,
+} from "lucide-react";
 
 interface TaskFormModalProps {
   isOpen: boolean;
@@ -31,9 +47,14 @@ export default function TaskFormModal({
   const [dueDate, setDueDate] = useState("");
   const [dueTime, setDueTime] = useState("17:00");
   const [taggedUserIds, setTaggedUserIds] = useState<string[]>([]);
+  const [attachments, setAttachments] = useState<TaskAttachment[]>([]);
+  const [fileError, setFileError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
+    setFileError("");
     if (initialTask) {
       setTitle(initialTask.title);
       setDescription(initialTask.description);
@@ -43,6 +64,7 @@ export default function TaskFormModal({
       setDueDate(initialTask.dueDate);
       setDueTime(initialTask.dueTime || "17:00");
       setTaggedUserIds(initialTask.taggedUserIds || []);
+      setAttachments(initialTask.attachments || []);
     } else {
       setTitle("");
       setDescription("");
@@ -52,6 +74,7 @@ export default function TaskFormModal({
       setDueDate(new Date().toISOString().split("T")[0]);
       setDueTime("17:00");
       setTaggedUserIds([]);
+      setAttachments([]);
     }
   }, [initialTask, categories, isOpen]);
 
@@ -63,6 +86,52 @@ export default function TaskFormModal({
         ? prev.filter((id) => id !== userId)
         : [...prev, userId]
     );
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setFileError("");
+    const maxFileSize = 4 * 1024 * 1024; // 4MB per file limit
+    const newAttachments: TaskAttachment[] = [];
+
+    for (const file of Array.from(files)) {
+      if (file.size > maxFileSize) {
+        setFileError(`ไฟล์ "${file.name}" มีขนาดเกิน 4MB`);
+        continue;
+      }
+
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result));
+        reader.onerror = () => reject(new Error("Read error"));
+        reader.readAsDataURL(file);
+      });
+
+      newAttachments.push({
+        id: `att_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+        name: file.name,
+        type: file.type || "application/octet-stream",
+        size: file.size,
+        url: dataUrl,
+      });
+    }
+
+    setAttachments((prev) => [...prev, ...newAttachments]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const removeAttachment = (id: string) => {
+    setAttachments((prev) => prev.filter((att) => att.id !== id));
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,6 +149,7 @@ export default function TaskFormModal({
         dueDate,
         dueTime,
         taggedUserIds,
+        attachments,
       });
       onClose();
     } finally {
@@ -91,7 +161,7 @@ export default function TaskFormModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-slate-200 overflow-hidden max-h-[90vh] flex flex-col">
+      <div className="bg-white rounded-2xl max-w-xl w-full shadow-xl border border-slate-200 overflow-hidden max-h-[92vh] flex flex-col">
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-slate-800">
             {initialTask ? "แก้ไขรายการงาน" : "เพิ่มรายการงานใหม่"}
@@ -218,6 +288,98 @@ export default function TaskFormModal({
             </div>
           </div>
 
+          {/* Attachments Section (Images & Files) */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-sm font-medium text-slate-700">
+                <span className="inline-flex items-center gap-1.5">
+                  <Paperclip className="w-4 h-4 text-slate-400" />
+                  แนบรูปภาพหรือไฟล์งาน
+                </span>
+              </label>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="text-xs font-medium text-indigo-600 hover:text-indigo-800 inline-flex items-center gap-1"
+              >
+                + เลือกรูปภาพ / ไฟล์แนบ
+              </button>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.zip,.csv"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+
+            {fileError && (
+              <p className="text-xs text-red-600 mb-2">{fileError}</p>
+            )}
+
+            {attachments.length === 0 ? (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-slate-200 hover:border-indigo-300 rounded-xl p-4 text-center cursor-pointer transition-colors bg-slate-50/50"
+              >
+                <div className="flex items-center justify-center gap-2 text-slate-400 mb-1">
+                  <ImageIcon className="w-5 h-5" />
+                  <FileText className="w-5 h-5" />
+                </div>
+                <p className="text-xs text-slate-600 font-medium">
+                  คลิกเพื่ออัปโหลดรูปภาพ หรือไฟล์เอกสารประกอบงาน
+                </p>
+                <p className="text-[11px] text-slate-400 mt-0.5">
+                  รองรับรูปภาพ (PNG, JPG) และไฟล์เอกสาร (PDF, DOCX, XLSX, ZIP ฯลฯ)
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                {attachments.map((att) => {
+                  const isImage = att.type.startsWith("image/");
+                  return (
+                    <div
+                      key={att.id}
+                      className="flex items-center justify-between gap-3 bg-white p-2 rounded-lg border border-slate-200/80"
+                    >
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        {isImage ? (
+                          <img
+                            src={att.url}
+                            alt={att.name}
+                            className="w-10 h-10 rounded-md object-cover border border-slate-200 shrink-0"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-md bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                            <FileText className="w-5 h-5" />
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-xs font-medium text-slate-800 truncate">
+                            {att.name}
+                          </p>
+                          <p className="text-[11px] text-slate-400">
+                            {formatFileSize(att.size)}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeAttachment(att.id)}
+                        className="p-1.5 text-slate-400 hover:text-red-600 rounded-md"
+                        title="ลบไฟล์แนบ"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
               <span className="inline-flex items-center gap-1.5">
@@ -242,7 +404,9 @@ export default function TaskFormModal({
                     <span
                       className="w-2 h-2 rounded-full"
                       style={{
-                        backgroundColor: selected ? "#ffffff" : user.avatarColor,
+                        backgroundColor: selected
+                          ? "#ffffff"
+                          : user.avatarColor,
                       }}
                     />
                     {user.name} ({user.role})

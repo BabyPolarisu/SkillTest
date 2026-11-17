@@ -33,6 +33,10 @@ export async function PATCH(
         Array.isArray(body.taggedUserIds)
           ? body.taggedUserIds
           : existing.taggedUserIds,
+      attachments:
+        Array.isArray(body.attachments)
+          ? body.attachments
+          : existing.attachments || [],
       updatedAt: new Date().toISOString(),
     };
 

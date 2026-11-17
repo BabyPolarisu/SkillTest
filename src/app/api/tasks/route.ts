@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
       dueDate,
       dueTime,
       taggedUserIds,
+      attachments,
     } = body;
 
     if (!ownerId || !title || !dueDate) {
@@ -61,6 +62,7 @@ export async function POST(req: NextRequest) {
       dueDate: String(dueDate),
       dueTime: dueTime ? String(dueTime) : "17:00",
       taggedUserIds: Array.isArray(taggedUserIds) ? taggedUserIds : [],
+      attachments: Array.isArray(attachments) ? attachments : [],
       createdAt: now,
       updatedAt: now,
     };
