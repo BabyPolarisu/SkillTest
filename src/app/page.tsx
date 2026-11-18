@@ -428,7 +428,7 @@ export default function HomePage() {
             </div>
             <div>
               <h1 className="text-base sm:text-lg font-bold text-blue-950 dark:text-slate-100 leading-tight">
-                TaskFlow
+                Work To-do
               </h1>
               <p className="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">
                 ระบบจัดการรายการงานและตารางเวลาส่วนตัว
@@ -1026,11 +1026,11 @@ export default function HomePage() {
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                สีเหลือง (2-4 วัน)
+                สีเหลือง (2-3 วัน)
               </span>
               <span className="inline-flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                สีเขียว (5+ วัน)
+                สีเขียว (4+ วัน)
               </span>
             </div>
           </div>
@@ -1323,7 +1323,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="bg-white dark:bg-slate-800/90 border-t border-blue-100 dark:border-slate-700/80 py-4 mt-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 dark:text-slate-500 gap-2">
-          <p>TaskFlow — To-Do List & Task Management System</p>
+          <p>Work To-Do — To-Do List & Task Management System</p>
           <p>Developed by Kitthanakorn Chueaprathum</p>
         </div>
       </footer>

@@ -1,8 +1,9 @@
 # TaskFlow — Fullstack To-Do List & Task Management System
 
-โปรเจกต์เว็บแอปพลิเคชันจัดการรายการงานและตารางเวลา (**To-Do List Application - Option 3**) พัฒนาขึ้นสำหรับแบบทดสอบ **Skill Test for Fullstack Developer Trainee**  
+โปรเจกต์เว็บแอปพลิเคชันจัดการรายการงานและตารางเวลา (**To-Do List Application**)  
 **ผู้พัฒนา (Developer):** Kitthanakorn Chueaprathum  
 **GitHub Repository:** [https://github.com/BabyPolarisu/SkillTest](https://github.com/BabyPolarisu/SkillTest)
+**Deploy:** [https://skill-test.vercel.app](https://skill-test.vercel.app)
 
 ---
 
